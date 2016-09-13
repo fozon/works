@@ -1,4 +1,6 @@
-e if(typeof $f != "object")
+var $f;
+if(!$f)$f={};
+else if(typeof $f != "object")
 throw new Error('$f already exists and is not object');
 
 if(!$f.fn)$f.fn = {};

@@ -33,18 +33,14 @@ rolling是一个面向对象程序设计的老虎机效果
 
 //调用方法
 
-var laohuji = new Laohuji(InitObj, InitParam);
-laohuji._run();
+var laohuji = new Laohuji({
 
-//设置参数
-
-var InitObj = {
 id: 'laohuji', //控件入口
 class: 'laohuji',
 parentId: 'body'
-};
 
-var InitParam = { //设置参数
+},{
+
 i: 1,
 speed: 50,
 state: 0,
@@ -63,19 +59,21 @@ namesArry: [ //api
 '77728:霓漫天:/avatar/777117.png',
 '77729:摩严:/avatar/777127.png'
 ]
-}
+
+});
+
+laohuji._run();
+
 
 # limitLen.js
 limitLen设定几行文字出现省略号，同时还可以查找指定元素节点
 
 //调用方法
-
-personReason('li',2,'span');  // obj为文本对象的父级  line为限制几行出现省略号  more为展开的元素设定
+personReason('li',2,'span');  // 参数1为文本对象的父级，参数2为限制几行出现省略号，参数3为more为展开的元素设定
 
 
 # selectText.js
 selectText.js选中左边文字，获取整句，右边根据整句自动定位
 
 //调用方法
-
 new SelectTextPostion('a1','showresult'); //选择区ID，滚动ID样式名

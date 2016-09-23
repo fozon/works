@@ -12,3 +12,15 @@ $fo('li').each(function(){
   })
   
 })
+
+wordRolling是一个数字滚动插件，目前依赖于jQuery，后期优化为原生
+
+//调用方法
+
+wordRolling({
+	word : 1000000,	//字符
+	id: ‘wordRolling’, //设定控件
+	width : 1000,	//宽度
+	height :  300,	//高度
+	flag : 1	//是否逗号分隔开关
+})

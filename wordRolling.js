@@ -1,6 +1,6 @@
 //展示数字及字符翻滚效果
-function numberRolling(param) {
-    this.num = param.number || 10000000;//传入用户设定的数值,如果没有使用默认
+function wordRolling(param) {
+    this.num = param.word || 10000000;//传入用户设定的数值,如果没有使用默认
     this.id = param.id || 'number_rolling'; //是否指定控件，否则为默认控件
     this.flag = param.flag; //是否使用逗号分割模式
     this.width = param.width || 'auto'; //宽度默认自动

@@ -1,4 +1,4 @@
-# works
+# fojquery
 fojquery一个类似于jQuery框架的简单的demo.
 
 //调用方法
@@ -13,6 +13,7 @@ $fo('li').each(function(){
   
 })
 
+# wordRolling
 wordRolling是一个数字滚动插件，目前依赖于jQuery，后期优化为原生
 
 //调用方法

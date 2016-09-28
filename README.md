@@ -9,6 +9,7 @@ myplusIn.方法名();
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
 //自定义插件调用方法
+
 $f.fn.text() = function(){
 	console.log($fo(this));
 }

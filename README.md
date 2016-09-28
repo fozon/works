@@ -3,10 +3,15 @@ myplusin自己整合的一个自己日常使用的插件集合，日后还会完
 
 //调用方法
 
-myplusIn.方法名
+myplusIn.方法名();
 
-# fojquery.js
-fojquery一个类似于jQuery框架的简单的demo.
+# foQuery.js
+foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
+
+//自定义插件调用方法
+$f.fn.text() = function(){
+	console.log($fo(this));
+}
 
 //调用方法
 
@@ -14,7 +19,7 @@ $fo('li').each(function(){
 
   $fo(this).click(function(){
   
-    $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title')
+    $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');
     
   })
   

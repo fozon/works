@@ -38,17 +38,13 @@
 			},
 			addClass : function(a){
 				if(!a)return;
-				if(this.length){
-					for(var i=0;i<this.length;i++){
-						if(this[i].className.indexOf(a)<0) {
-							this[i].className = this[i].className + ' ' + a;
-						}
-					}
-				}else{
-					if(this.className.indexOf(a)<0){
-						this.className = this.className + ' ' + a;
+				if(!this.length)return;
+				for(var i=0;i<this.length;i++){
+					if(this[i].className.indexOf(a)<0) {
+						this[i].className = this[i].className?this[i].className + ' ' + a:a;
 					}
 				}
+
 				return this;
 			},
 			removeClass : function(a){
@@ -58,12 +54,8 @@
 						for(var i=0;i<this.length;i++){
 							if(!this[i].className){
 								continue;
-							}else if(this[i].className==''){
-								continue;
-							}else if(this[i].className.indexOf(' '+a)>-1){
-								this[i].className = this[i].className.replace(' '+a,'');
 							}else if(this[i].className.indexOf(a)>-1){
-								this[i].className = this[i].className.replace(a,'');
+								this[i].className = this[i].className.replace(eval("/([\\s]*"+ a +")/"),'');
 							}
 						}
 					}
@@ -89,7 +81,7 @@
 				}
 				return this;
 			},
-			lick : function(a){
+			click : function(a){
 				if(!a)return;
 				for(var i=0;i<this.length;i++){
 					this[i].onclick = function(){
@@ -139,6 +131,7 @@
 		}
 
 		fo.FoEleArr = function(a){
+			if(!doc.querySelectorAll(a).length)return;
 			var arr = [],
 			_this = typeof a == 'string' && a !='' ? doc.querySelectorAll(a):a,
 			thisArr = toArr(_this);

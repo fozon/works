@@ -1,3 +1,10 @@
+# myplus-in.js
+myplusin自己整合的一个自己日常使用的插件集合，日后还会完善
+
+//调用方法
+
+myplusIn.方法名
+
 # fojquery.js
 fojquery一个类似于jQuery框架的简单的demo.
 

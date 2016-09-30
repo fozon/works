@@ -131,10 +131,10 @@
 		}
 
 		fo.FoEleArr = function(a){
-			if(!doc.querySelectorAll(a).length)return;
 			var arr = [],
 			_this = typeof a == 'string' && a !='' ? doc.querySelectorAll(a):a,
 			thisArr = toArr(_this);
+			if(!_this.length)throw new Error(a+' is not found!');
 			function toArr(arr){
 				var eleArr = [];
 				if(arr.length){

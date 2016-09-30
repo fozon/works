@@ -1,11 +1,19 @@
 ;(function(w,doc,undefined){
 	var $f = function(){
-		$f.prototype.fn = {};
+		this.fn = {};
 	};
-	window.$f = new $f();
+	w.$f = new $f();
 	var $fo = function(a){
 		var fo = {};
 		fo.FoProtoFun = function(){
+			this.deepCopy = function(target){
+				if(typeof target != 'object'){
+					return target;	
+				}
+				for(var i in target){
+					this[i] = this.deepCopy(target[i]);
+				}
+			};
 			this.findele = function(eles){
 				var arr = [];
 				for(var i=0,j=0;i<eles.length;i++){
@@ -14,11 +22,9 @@
 					}
 				}
 				return arr;
-			}
+			};
 
-			for(var i in window.$f.fn){
-				this[i] = window.$f.fn[i];
-			}
+			this.deepCopy(w.$f);
 			return this;
 		};
 		

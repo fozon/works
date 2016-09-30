@@ -137,10 +137,14 @@
 		}
 
 		fo.FoEleArr = function(a){
+
+		    if(typeof a == 'string'){
+		    	if(!doc.querySelector(a))throw new Error(a+' is not found!');
+		    };
+
 			var arr = [],
 			_this = typeof a == 'string' && a !='' ? doc.querySelectorAll(a):a,
 			thisArr = toArr(_this);
-			if(!_this.length)throw new Error(a+' is not found!');
 			function toArr(arr){
 				var eleArr = [];
 				if(arr.length){
@@ -153,8 +157,10 @@
 			for(var i in thisArr){
 				arr[i]=thisArr[i];
 			}
+
 			arr.context = doc;
 			arr.selector = a;
+
 			Object.setPrototypeOf(arr,new fo.FoProtoFun());
 
 			return arr;

@@ -1,5 +1,5 @@
 # myplus-in.js
-myplusin自己整合的一个自己日常使用的插件集合，日后还会完善
+myplusin自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 //调用方法
 
@@ -24,21 +24,6 @@ $fo('li').each(function(){
     
   })
   
-})
-
-# wordRolling.js
-wordRolling是一个数字滚动插件，目前依赖于jQuery，后期优化为原生
-
-//调用方法
-
-wordRolling({
-
-	word : 1000000,	//字符
-	id: ‘wordRolling’, //设定控件
-	width : 1000,	//宽度
-	height :  300,	//高度
-	flag : 1	//是否逗号分隔开关
-
 })
 
 # rolling.js
@@ -76,17 +61,3 @@ namesArry: [ //api
 });
 
 laohuji._run();
-
-
-# limitLen.js
-limitLen设定几行文字出现省略号，同时还可以查找指定元素节点
-
-//调用方法
-personReason('li',2,'span');  // 参数1为文本对象的父级，参数2为限制几行出现省略号，参数3为more为展开的元素设定
-
-
-# selectText.js
-selectText.js选中左边文字，获取整句，右边根据整句自动定位
-
-//调用方法
-new SelectTextPostion('a1','showresult'); //选择区ID，滚动ID样式名

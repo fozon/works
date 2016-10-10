@@ -6,14 +6,14 @@
 
 	MyplusIn.prototype = {
 
-		//限制字符显示更多
+		//限制字符显示更多（第一个参数是包含文字的元素对象，第二个参数是限制几行，第三个参数是指定显示展开的元素对象）
 		limitLen: function doLimitLen(obj,line,more){ 
 			var _this = obj,
 				elesize = document.defaultView.getComputedStyle(_this).fontSize || _this.currentStyle.fontSize, //兼容浏览器
 				limitCount = parseInt(_this.offsetWidth/parseInt(elesize))*line,
 				text = findChild(_this)?findChild(_this).textContent:'';
-;
-		 		//查找子元素
+
+		 		//查找子元素（str为指定的元素）
 		 		function findChild(obj,str){
 		 			var state=0,strv;
 		 			str?strv=str:strv='';
@@ -41,7 +41,7 @@
 		 			}
 		 		}
 
-			//text如果全部为空字符串则隐藏
+			//默认加载时如果内容为空则隐藏
 			if(!/(\S)/g.test(text)){    
 				obj.style.display='none';
 				return;
@@ -51,6 +51,7 @@
             if(/\w/i.test(text)){
                 var cot = text.substr(0,limitCount).match(/\w/ig).length;
             }
+            //加载时的字符截取限制
 			if(text.length>=limitCount){
 				findChild(_this).textContent = text.substr(0,limitCount+cot-5)+'...';
 				findChild(_this,more).style.display = "inline";
@@ -58,6 +59,7 @@
 				findChild(_this).textContent = text;
 				findChild(_this,more).style.display = "none";
 			}
+            // 点击展开收起
 			findChild(_this,more).onclick = function(){
 				if(this.innerText != '收起'){
 					this.innerText = '收起';
@@ -69,7 +71,7 @@
 			}
 		},
 
-		//选中左边文字定位右边内容
+		//选中左边文字定位右边内容（第一个参数为选定的文字对象，第二个参数为被定位的元素对象）
 		selectTextPos: function doSelectTextPostion(select,iscontrl){
 			var text = document.getElementById(select),
 			contrl = document.getElementById(iscontrl),
@@ -101,7 +103,7 @@
 					}
 				}
 				var sele = document.querySelectorAll('.'+iscontrl+' span');
-				for(var i=0,j;j;j=sele[i++]){
+				for(var i=0,j;j=sele[i++];){
 					if(j.innerText.indexOf(newsubt)>-1){
 						contrl.scrollTop = j.offsetTop-contrl.offsetTop;
 						break;
@@ -116,7 +118,7 @@
         	return reg.test(str);
         },
 
-        //计算中间内容的自动高度居中
+        //计算中间内容的自动高度居中（非position）
         autoHeight: function doAutoHeight(cur) {
         	var log = $('.' + cur), winHeight = $(w).height(), logHeight = $(log).outerHeight(true), bodyHeight = $('body').outerHeight(true);
             if (winHeight > logHeight + 58 + 60 + 50) {  //58为头部高度，60为底部高度，50手动设定的最小高度，为了体验

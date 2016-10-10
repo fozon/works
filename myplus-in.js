@@ -101,7 +101,7 @@
 					}
 				}
 				var sele = document.querySelectorAll('.'+iscontrl+' span');
-				for(var i=0,j;j=sele[i++]){
+				for(var i=0,j;j;j=sele[i++]){
 					if(j.innerText.indexOf(newsubt)>-1){
 						contrl.scrollTop = j.offsetTop-contrl.offsetTop;
 						break;

@@ -11,11 +11,11 @@
 			var _this = obj,
 				elesize = document.defaultView.getComputedStyle(_this).fontSize || _this.currentStyle.fontSize, //兼容浏览器
 				limitCount = parseInt(_this.offsetWidth/parseInt(elesize))*line,
-				text = findChild(_this)?findChild(_this).textContent:'',
-				textstate ;
+				text = findChild(_this)?findChild(_this).textContent:'';
+;
 		 		//查找子元素
 		 		function findChild(obj,str){
-		 			var i = 0,state=0,strv;
+		 			var state=0,strv;
 		 			str?strv=str:strv='';
 		 			switch(strv){
 		 				case 'text':case '':
@@ -25,38 +25,34 @@
 		 				state = 1;
 		 				break;
 		 			}
-		 			for(var i=0;i<obj.childNodes.length;i++){
+                    var n = obj.firstChild;
+		 			for(;n;n=n.nextSibling){
 		 				if(state == 1){
-		 					if(obj.childNodes[i].nodeType == state){
-		 						if(obj.childNodes[i].tagName.toLowerCase()==str){
-		 							return obj.childNodes[i];
+		 					if(n.nodeType == state){
+		 						if(n.tagName.toLowerCase()==str){
+		 							return n; 
 		 						};
 		 					}
 		 				}else if(state == 3){
-		 					if(obj.childNodes[i].nodeType == state){
-		 						return obj.childNodes[i];
+		 					if(n.nodeType == state){
+		 						return n;
 		 					}
 		 				}
 		 			}
 		 		}
-			//判断text是否全部为空字符串
-			for(var i in text){  
-				if(text[i]!=' '){
-					textstate = true;
-					break;
-				}else{
-					textstate = false;
-				}
-			}
+
 			//text如果全部为空字符串则隐藏
-			if(!textstate){    
+			if(!/(\S)/g.test(text)){    
 				obj.style.display='none';
 				return;
 			}else{
 				obj.style.display='block';
 			}
+            if(/\w/i.test(text)){
+                var cot = text.substr(0,limitCount).match(/\w/ig).length;
+            }
 			if(text.length>=limitCount){
-				findChild(_this).textContent = text.substr(0,limitCount-3)+'...';
+				findChild(_this).textContent = text.substr(0,limitCount+cot-5)+'...';
 				findChild(_this,more).style.display = "inline";
 			}else{
 				findChild(_this).textContent = text;
@@ -68,7 +64,7 @@
 					findChild(_this).textContent = text;
 				}else{
 					this.innerText = '展开';
-					findChild(_this).textContent = text.substr(0,limitCount-3)+'...';
+					findChild(_this).textContent = text.substr(0,limitCount+cot-5)+'...';
 				}
 			}
 		},
@@ -105,9 +101,9 @@
 					}
 				}
 				var sele = document.querySelectorAll('.'+iscontrl+' span');
-				for(var i=0;i<sele.length;i++){
-					if(sele[i].innerText.indexOf(newsubt)>-1){
-						contrl.scrollTop = sele[i].offsetTop-contrl.offsetTop;
+				for(var i=0,j;j=sele[i++]){
+					if(j.innerText.indexOf(newsubt)>-1){
+						contrl.scrollTop = j.offsetTop-contrl.offsetTop;
 						break;
 					}
 				}

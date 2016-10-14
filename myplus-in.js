@@ -71,6 +71,35 @@
 			}
 		},
 
+        //用户名为手机号格式或者是邮箱格式，以及为空时  fuzhen
+        isCheckUsername : function doisCheckUsername(str,state) {
+            if(state){
+                return /^[1][\d]{10}$|^([\w.])+@([\w])+(\.[a-zA-Z]+)+$/.test(str);
+            }else{
+                return /(^\s+)(\s)*(\s+$)/.test(str);
+            }
+        },
+
+        //select切换效果
+        selectedStyle: function doSelectStyle(){
+            var selects = document.getElementsByTagName('select');
+            function selectedStyle(obj) {
+                if(!obj.selectedIndex){
+                    obj.style.cssText = obj.style.cssText + 'color:#999';
+                }else{
+                    obj.style.cssText = obj.style.cssText + 'color:#000';
+                }
+            }
+            for(var i=0,j;j=selects[i++];){
+                selectedStyle(j);
+                (function(j){
+                    j.onchange = function(){
+                        selectedStyle(this);
+                    }
+                })(j)
+            }
+        },
+
 		//选中左边文字定位右边内容（第一个参数为选定的文字对象，第二个参数为被定位的元素对象）
 		selectTextPos: function doSelectTextPostion(select,iscontrl){
 			var text = document.getElementById(select),

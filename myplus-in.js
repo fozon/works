@@ -80,20 +80,32 @@
             }
         },
 
-        //select切换效果
-        selectedStyle: function doSelectStyle(){
-            var selects = document.getElementsByTagName('select');
-            function selectedStyle(obj) {
-                if(!obj.selectedIndex){
-                    obj.style.cssText = obj.style.cssText + 'color:#999';
-                }else{
-                    obj.style.cssText = obj.style.cssText + 'color:#000';
+        //select切换
+        selectedStyle: function doSelectStyle() {
+            if (arguments[0]) {
+                if (typeof arguments[0] == 'string' && document.getElementById(arguments[0]))var notOne = document.getElementById(arguments[0]);//ID，过滤指定select对象
+                else if (typeof arguments[0] == 'object') { //OBJ，指定的select单独调用方法
+                    selectedStyle(arguments[0]);
+                    return;
+                } else {
+                    throw new Error('ID or Object is not found!');
                 }
             }
-            for(var i=0,j;j=selects[i++];){
+            var selects = document.getElementsByTagName('select');
+            function selectedStyle(obj) {
+                if (!obj.selectedIndex) {
+                    obj.style.cssText = obj.style.cssText + ';color:#999';
+                } else {
+                    obj.style.cssText = obj.style.cssText + ';color:#000';
+                }
+            }
+            for (var i = 0, j; j = selects[i++];) {
                 selectedStyle(j);
-                (function(j){
-                    j.onchange = function(){
+                if (notOne && j === notOne) {
+                    continue;
+                }
+                (function (j) {
+                    j.onchange = function () {
                         selectedStyle(this);
                     }
                 })(j)

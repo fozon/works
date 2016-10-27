@@ -1,3 +1,17 @@
+# pageMaxLimit.js
+原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰
+
+//调用方法
+
+w.onload = function () {
+        var goPage = new GoPage();
+        if (goPage.goPageBtn) {
+            goPage.init();
+            goPage.goPageBtn.onclick = goPage.clickEvent.bind(goPage);
+            goPage.goPageId.onkeyup = goPage.keyupEvent.bind(goPage);
+        }
+    };
+
 # myplus-in.js
 myplusin自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 

@@ -139,7 +139,6 @@
 				for(var i=0;i<arc.length;i++){
 					if(arc[i]<pos && pos<arc[i+1]){
 						newsubt = subt.substr(arc[i]+1,arc[i+1]-arc[i]-1);
-						console.log(newsubt);
 						break;
 					}
 				}

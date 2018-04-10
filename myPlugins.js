@@ -15,12 +15,12 @@
  */
 ;(function (w, doc, $, undefined) {
 
-	function MyPlusIn(param) {
+	function MyPlugins(param) {
 		this.param = param || {};
 		this.init();
 	}
 
-	MyPlusIn.prototype = {
+	MyPlugins.prototype = {
 		/*
 		 * 初始化
 		 * */
@@ -455,7 +455,7 @@
 		}
 	};
 
-	w.myPlusIn = new MyPlusIn();
+	w.myPlugins = new MyPlugins();
 
 })(window, document, (function ($) {
 	return $ || {};

@@ -21,12 +21,12 @@ w.onload = function () {
 
     
 
-# myplus-in.js
-myplusin自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
+# myPlugins.js
+myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 //调用方法
 
-myplusIn.方法名();
+myPlugins.方法名();
 
 # foQuery.js
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.

@@ -1,3 +1,39 @@
+# drageCell.js
+拖拽单元格插件
+
+//调用方法
+
+// 默认加载接口
+var dc = new DragCell({
+    data: api,
+    id: '#table',
+    dragable: true,
+    options: {
+        // 传进来的患者id
+        patientId: '999',
+        // 诊室id
+        orderWaitRoom: '100',
+        name: '哈哈'
+    }
+})
+
+// 暴露打包方法
+document.querySelector('#ok').onclick = function (params) {
+    // render为返回打包的json数据
+    var render = dc.renderArray;
+    document.querySelector('#result').innerHTML = JSON.stringify(render);
+}
+
+// 更新数据方法 用于ajax翻页后
+document.querySelector('#update').onclick = function (params) {
+    return
+    dc && dc.update({
+        data: api2,
+        id: '#table',
+        dragable: true
+    })
+}
+
 # pageMaxLimit.js
 原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰
 

@@ -4,6 +4,7 @@
 //调用方法
 
 // 默认加载接口
+
 var dc = new DragCell({
     data: api,
     id: '#table',
@@ -18,6 +19,7 @@ var dc = new DragCell({
 })
 
 // 暴露打包方法
+
 document.querySelector('#ok').onclick = function (params) {
     // render为返回打包的json数据
     var render = dc.renderArray;
@@ -25,6 +27,7 @@ document.querySelector('#ok').onclick = function (params) {
 }
 
 // 更新数据方法 用于ajax翻页后
+
 document.querySelector('#update').onclick = function (params) {
     return
     dc && dc.update({

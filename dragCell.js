@@ -1,8 +1,3 @@
-/**
- * 拖拽单元格
- * 
- */
-
 ; (function (window, document, undefined) {
 
     window.DragCell = DragCell;
@@ -22,6 +17,7 @@
             var object = params.data;
             var lis = document.createDocumentFragment();
             // 创建默认的thead
+            var body = document.querySelector('body');
             var ul = document.createElement('ul');
             var li = document.createElement('li');
             li.classList.add('thead');
@@ -45,8 +41,18 @@
             ul.appendChild(this.times(object, params));
             renderTpl.innerHTML = '';
             renderTpl.appendChild(ul);
+            // 已选中 显示
+            var selectedEle = document.createElement('div');
+            selectedEle.classList.add('select-text');
+            selectedEle.id = 'selectText';
+            renderTpl.appendChild(selectedEle);
             // 拖拽
-            this.bindEvent(params);
+            this.bindEvent(params, renderTpl);
+            // 创建样式
+            if (params.style) {
+                body.appendChild(this.createStyle());
+            }
+
         },
         // 第一级 时刻
         times: function (object) {
@@ -95,6 +101,9 @@
             for (var index = 0; index < array.length; index++) {
                 var element = array[index];
                 var p = document.createElement('p');
+                if (element.patientId == this.params.options.patientId) {
+                    p.classList.add('current-patient');
+                }
                 p.dataset.data = JSON.stringify(element);
                 p.innerHTML = element.name + ' ' + element.fixWay;
                 // 今天之前的不容拖动，置灰
@@ -105,21 +114,16 @@
             }
             // 如果今天之后的给与操作
             if (parentTime >= today) {
-                var add = document.createElement('div');
-                add.classList.add('add');
-                add.innerHTML = '+';
-                patients.appendChild(add);
-                var data = {
-                    orderDate: time.orderDate,
-                    week: time.week
+                if (!this.params.dragable) {
+                    var add = document.createElement('div');
+                    add.classList.add('add');
+                    add.innerHTML = '+';
+                    patients.appendChild(add);
+                    var data = {
+                        orderDate: time.orderDate,
+                        week: time.week
+                    }
                 }
-
-                // 点击加号按钮
-                var addClick = _this.addClick.bind(_this);
-                add.onmousedown = function (event) {
-                    addClick(event, this)
-                }
-
             } else {
                 parentOjb.dataset.disable = 'false';
             }
@@ -131,7 +135,7 @@
             var res = this.inArray(this.renderArray, data);
             if (res.status) {
                 this.renderArray.splice(res.index, 1, data);
-                var remove = document.querySelector('[data-mark="'+ (data.id + data.fixWay) +'"]');
+                var remove = document.querySelector('[data-mark="' + (data.id + data.fixWay) + '"]');
                 remove.parentNode.removeChild(remove);
             } else {
                 this.renderArray.push(data);
@@ -173,12 +177,15 @@
                 this.show(dragAddMenu);
             }
 
-            dragAddMenu.style.cssText = 'position:absolute;top:' + (addOjb.parentNode.offsetTop + addOjb.parentNode.clientHeight) + 'px;left:' + addOjb.parentNode.offsetLeft + 'px;width:' + addOjb.parentNode.clientWidth + 'px;';
+            // dragAddMenu.style.cssText = 'position:absolute;top:' + (addOjb.parentNode.offsetTop + addOjb.parentNode.clientHeight) + 'px;left:' + addOjb.parentNode.offsetLeft + 'px;width:' + addOjb.parentNode.clientWidth + 'px;z-index:10000000;';
+            dragAddMenu.style.cssText = 'position:absolute;top:' + (e.clientY) + 'px;left:' + (e.clientX) + 'px;width:' + addOjb.parentNode.clientWidth + 'px;z-index:10000000;';
 
+            dragAddMenu.onmousedown = null;
             // 点击选择类型
             dragAddMenu.onmousedown = function () {
                 var res = _this.chooseType();
                 var p = document.createElement('p');
+                p.classList.add('current-patient');
                 var data = {
                     id: undefined,
                     name: _this.params.options.name,
@@ -230,12 +237,12 @@
             obj.style.display = 'none';
         },
         // 拖拽事件绑定
-        bindEvent: function (params) {
-            if (!params.dragable) {
-                document.onmousedown = null;
-                document.onmouseup = null;
-                return false;
-            }
+        bindEvent: function (params, renderTpl) {
+            // if (!params.dragable) {
+            //     document.onmousedown = null;
+            //     document.onmouseup = null;
+            //     return false;
+            // }
             var _this = this,
                 moveOjb = null,
                 // 记录初始位置
@@ -251,8 +258,17 @@
                 dragAddMenu && _this.hide(dragAddMenu);
                 // 不是p，禁止右键操作
                 var el = e.target || e.srcElement;
-                if (el.nodeName != 'P' && el.parentNode.classList != 'drag-cell-td' || e.which == 3 || el.dataset.disable == 'false') return false;
+                if (el.classList == 'add') {
+                    // 点击加号按钮
+                    _this.addClick.call(_this, event, el);
+                    return;
+                }
+                if (el.nodeName != 'P' && el.parentNode.classList != 'drag-cell-td' || e.which == 3 || el.dataset.disable == 'false' || !params.dragable) return;
                 defaultIndex = el.dataset.index;
+                // 显示选中文本
+                var data = JSON.parse(el.dataset.data);
+                var selectedEle = document.querySelector('#selectText');
+                selectedEle.innerText = '已选中：' + data.name + ' ' + data.fixWay + ' ' + data.orderDate + ' ' + data.week + ' ' + el.parentNode.dataset.timesId;
                 // 复制移动体
                 var clone = el.cloneNode(true);
                 clone.style.display = 'none';
@@ -261,10 +277,10 @@
                 defaultParent = el.parentNode;
                 defaultParent.removeChild(el);
                 // 添加拖拽
-                document.onmousemove = function (e) {
+                this.onmousemove = function (e) {
                     if (!moveOjb) return false;
                     dragStatus = true;
-                    moveOjb.style.cssText = 'display: block; position:absolute;left:' + e.clientX + 'px;top:' + (e.clientY + 10) + 'px;z-index: 999;background:#eee;padding:10px 20px;box-shadow: 0px 3px 5px #ccc;';
+                    moveOjb.style.cssText = 'display: block; position:absolute;left:' + e.clientX + 'px;top:' + (e.clientY + 10) + 'px;z-index: 1000000;background:#06b;color:#fff;padding:10px 20px;box-shadow: 0px 3px 5px #ccc;';
                 }
             }
 
@@ -275,17 +291,17 @@
                     appendEl = null;
 
                 // 禁止右键操作
-                if (e.which == 3) {
-                    return false;
+                if (e.which == 3 || !params.dragable) {
+                    return;
                 }
                 // 子集容器
                 var children = [];
                 // 清除拖拽 防止内存溢出
-                document.onmousemove = null;
+                this.onmousemove = null;
 
                 // 是否有这个对象
                 if (!moveOjb) {
-                    return false;
+                    return;
                 } else {
                     // 清除跟随鼠标
                     moveOjb.style.cssText = '';
@@ -296,11 +312,10 @@
                 if (!dragStatus) {
                     moveOjb.style.cssText = '';
                     defaultParent && defaultParent.insertBefore(moveOjb, defaultParent.childNodes[defaultIndex]);
-                    return false;
+                    return;
                 }
 
                 data = JSON.parse(moveOjb.dataset.data);
-
                 // 是否包含P的div，才是cell
                 if (el.nodeName == 'DIV' && el.classList == 'drag-cell-td' && el.dataset.disable != 'false') {
                     data.week = el.dataset.parentId;
@@ -389,207 +404,40 @@
         update: function (params) {
             this.params = params;
             this.init(this.params);
+        },
+        createStyle: function (params) {
+            var style = document.createElement('style'),
+                str = '';
+            str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 14px;}';
+            str += '.drag-table {user-select: none;}';
+            str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;}';
+            str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
+            str += '.drag-table li.thead div,.drag-table li span {display: block;padding: 10px;}';
+            str += '.drag-table ul li {display: flex;justify-content: space-between;}';
+            str += '.drag-table li>div {position: relative;width: 12.5%;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom: 30px;}';
+            str += '.drag-table li>div .add {position: absolute;left: 0px;bottom: 0px;width: 100%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;}';
+            str += '.drag-table li>div .add:hover,.dragable-add-menu p:hover {background: #eee;}';
+            str += '.drag-table li p {padding: 10px;border-bottom: 1px solid #ccc;font-size: 12px;}';
+            str += '.drag-table li p:last-child {border: 0;}';
+            str += '.drag-table li p[data-disable="false"] {background: #eee;}';
+            str += '.drag-table .current-patient {background: #06b;color:#fff;}';
+            str += '.dragable-add-menu {border: 1px solid #ccc;background: #fff;box-shadow: 1px 2px 4px #ccc;}';
+            str += '.dragable-add-menu p {padding: 10px;border-bottom: 1px solid #ccc;cursor: pointer;}';
+            if (style.styleSheet) {
+                style.styleSheet.cssText = str;
+            } else {
+                style.innerHTML = str;
+            }
+            return style;
+        },
+        save: function (params) {
+            var res = this.renderArray;
+            this.renderArray = [];
+            return res;
+        },
+        cancel: function (params) {
+            this.renderArray = [];
         }
     }
 
 })(window, document)
-
-
-var api = {
-    "8:00-9:00": [
-        {
-            "week": "周一",
-            "orderDate": "2018-04-16",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周二",
-            "orderDate": "2018-04-17",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周二",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周二",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周三",
-            "orderDate": "2018-04-18",
-            "children": []
-        },
-        {
-            "week": "周四",
-            "orderDate": "2018-04-19",
-            "children": []
-        },
-        {
-            "week": "周五",
-            "orderDate": "2018-04-20",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-20",
-                "scheduleTime": "2018-04-20",
-                "week": "周二",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-20",
-                "scheduleTime": "2018-04-20",
-                "week": "周二",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周六",
-            "orderDate": "2018-04-21",
-            "children": []
-        },
-        {
-            "week": "周日",
-            "orderDate": "2018-04-22",
-            "children": []
-        }
-
-    ],
-    "9:00-10:00": [
-        {
-            "week": "周一",
-            "orderDate": "2018-04-16",
-            "children": [{
-                "id": 1,
-                "name": "王五",
-                "patientId": "111",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周二",
-            "orderDate": "2018-04-17",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周一",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周一",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周三",
-            "orderDate": "2018-04-18",
-            "children": []
-        },
-        {
-            "week": "周四",
-            "orderDate": "2018-04-19",
-            "children": []
-        },
-        {
-            "week": "周五",
-            "orderDate": "2018-04-20",
-            "children": []
-        },
-        {
-            "week": "周六",
-            "orderDate": "2018-04-21",
-            "children": []
-        },
-        {
-            "week": "周日",
-            "orderDate": "2018-04-22",
-            "children": []
-        }
-    ]
-}
-
-// 默认加载接口
-var dc = new DragCell({
-    data: api,
-    id: '#table',
-    dragable: true,
-    options: {
-        // 传进来的患者id
-        patientId: '999',
-        // 诊室id
-        orderWaitRoom: '100',
-        name: '哈哈'
-    }
-})
-
-// 暴露打包方法
-document.querySelector('#ok').onclick = function (params) {
-    // render为返回打包的json数据
-    var render = dc.renderArray;
-    document.querySelector('#result').innerHTML = JSON.stringify(render);
-}
-
-// 更新数据方法 用于ajax翻页后
-document.querySelector('#update').onclick = function (params) {
-    return
-    dc && dc.update({
-        data: api2,
-        id: '#table',
-        dragable: true
-    })
-}

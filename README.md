@@ -7,19 +7,117 @@
 
 var dc = new DragCell({
 
-    data: api,
-    id: '#table',
-    dragable: true,
+    data: api,  //数据接口
+    id: '#table', //指定模板
+    dragable: true, //是否拖拽
     options: {
-        // 传进来的患者id
-        patientId: '999',
-        // 诊室id
-        orderWaitRoom: '100',
-        name: '哈哈'
+        patientId: '999', //患者id
+        orderWaitRoom: '100', //诊室id
+        name: '哈哈' //患者姓名
     },
-    style: true
-    
+    style: true  //默认创建样式
+
 })
+
+//接口格式
+
+// 接口
+var api = {
+
+    "8:00-9:00": [
+        {
+            "week": "周一",
+            "orderDate": "2018-04-16",
+            "children": [{
+                "id": 1,
+                "name": "张三",
+                "patientId": "111",
+                "orderDate": "2018-04-16",
+                "scheduleTime": "2018-04-16",
+                "week": "周一",
+                "fixWay": "平扫"
+            },
+            {
+                "id": 2,
+                "name": "李四",
+                "patientId": "222",
+                "orderDate": "2018-04-16",
+                "scheduleTime": "2018-04-16",
+                "week": "周一",
+                "fixWay": "增强"
+            }
+            ]
+        },
+        {
+            "week": "周二",
+            "orderDate": "2018-04-17",
+            "children": [{
+                "id": 1,
+                "name": "张三",
+                "patientId": "111",
+                "orderDate": "2018-04-17",
+                "scheduleTime": "2018-04-17",
+                "week": "周二",
+                "fixWay": "平扫"
+            },
+            {
+                "id": 2,
+                "name": "李四",
+                "patientId": "222",
+                "orderDate": "2018-04-17",
+                "scheduleTime": "2018-04-17",
+                "week": "周二",
+                "fixWay": "增强"
+            }
+            ]
+        },
+        {
+            "week": "周三",
+            "orderDate": "2018-04-18",
+            "children": []
+        },
+        {
+            "week": "周四",
+            "orderDate": "2018-04-19",
+            "children": []
+        },
+        {
+            "week": "周五",
+            "orderDate": "2018-04-25",
+            "children": [{
+                "id": 1,
+                "name": "张三",
+                "patientId": "111",
+                "orderDate": "2018-04-25",
+                "scheduleTime": "2018-04-25",
+                "week": "周二",
+                "fixWay": "平扫"
+            },
+            {
+                "id": 2,
+                "name": "李四",
+                "patientId": "222",
+                "orderDate": "2018-04-25",
+                "scheduleTime": "2018-04-25",
+                "week": "周二",
+                "fixWay": "增强"
+            }
+            ]
+        },
+        {
+            "week": "周六",
+            "orderDate": "2018-04-26",
+            "children": []
+        },
+        {
+            "week": "周日",
+            "orderDate": "2018-04-27",
+            "children": []
+        }
+
+    ]
+    
+}
 
 # pageMaxLimit.js
 原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰

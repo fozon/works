@@ -10,51 +10,105 @@
 
     DragCell.prototype = {
         constructor: DragCell,
+        /**
+         * 初始化
+         */
         init: function (params) {
             this.create(params);
+            this.clearActive = this.clearActive.bind(this, params);
+            this.update = this.update.bind(this, params);
+            // this.patients = this.patients.bind(this, params);
         },
+        /**
+         * 创建节点
+         */
         create: function (params) {
             var object = params.data;
             var lis = document.createDocumentFragment();
             // 创建默认的thead
             var body = document.querySelector('body');
             var ul = document.createElement('ul');
-            var li = document.createElement('li');
-            li.classList.add('thead');
-            var html = '';
-            html += '<div></div>';
-            html += '<div>周一</div>';
-            html += '<div>周二</div>';
-            html += '<div>周三</div>';
-            html += '<div>周四</div>';
-            html += '<div>周五</div>';
-            html += '<div>周六</div>';
-            html += '<div>周日</div>';
-            li.innerHTML = html;
+
             // 追加thead
-            lis.appendChild(li);
+            lis.appendChild(this.createHeader(params.options.startTime));
+
             // 找到模板id
             var renderTpl = document.querySelector(params.id);
-            renderTpl.classList.add('drag-table');
+
+            // 创建样式
+            if (!renderTpl.classList.contains('drag-table') && params.style) {
+                body.appendChild(this.createStyle());
+            };
+
+            renderTpl.classList.add('drag-table', params.id.substr(1));
+
             // 创建模板
             ul.appendChild(lis);
             ul.appendChild(this.times(object, params));
             renderTpl.innerHTML = '';
             renderTpl.appendChild(ul);
-            // 已选中 显示
+
+            // 追加类型色块标志
+            renderTpl.appendChild(this.createTypeBlock());
+
+            // 追加已选中块
+            renderTpl.appendChild(this.createSelectedBlock());
+
+            // 拖拽
+            this.bindEvent(params, renderTpl);
+
+        },
+        /**
+         * 点击cell选中效果
+         */
+        createSelectedBlock: function (params) {
             var selectedEle = document.createElement('div');
             selectedEle.classList.add('select-text');
             selectedEle.id = 'selectText';
-            renderTpl.appendChild(selectedEle);
-            // 拖拽
-            this.bindEvent(params, renderTpl);
-            // 创建样式
-            if (params.style) {
-                body.appendChild(this.createStyle());
-            }
-
+            return selectedEle;
         },
-        // 第一级 时刻
+        /**
+         * 创建类型颜色块
+         */
+        createTypeBlock: function (params) {
+            var typeBlock = document.createElement('div');
+            typeBlock.classList.add('typeBlock');
+            typeBlock.innerHTML += '<div><i class="ps"></i>平扫</div>';
+            typeBlock.innerHTML += '<div><i class="zq"></i>增强</div>';
+            typeBlock.innerHTML += '<div><i class="cc"></i>穿刺</div>';
+            typeBlock.innerHTML += '<div><i class="hy"></i>核野</div>';
+            return typeBlock;
+        },
+        /**
+         * 创建thead
+         */
+        createHeader: function (startTime) {
+            var date = new Date(startTime),
+                getTime = date.getTime(),
+                li = document.createElement('li'),
+                div = document.createElement('div'),
+                getWeek = [];
+            li.classList.add('thead');
+            getWeek[1] = '周一';
+            getWeek[2] = '周二';
+            getWeek[3] = '周三';
+            getWeek[4] = '周四';
+            getWeek[5] = '周五';
+            getWeek[6] = '周六';
+            getWeek[0] = '周日';
+            li.appendChild(div);
+            for (var index = 0; index < 7; index++) {
+                var element = getTime + index * 24 * 60 * 60 * 1000;
+                date.setTime(element);
+                var curDiv = document.createElement('div')
+                curDiv.innerHTML = date.toLocaleDateString() + '<i>' + getWeek[date.getDay()] + '</i>';
+                li.appendChild(curDiv);
+            }
+            return li;
+        },
+        /**
+         * 第一级 时刻
+         */
         times: function (object) {
             var time = document.createDocumentFragment();
             for (var key in object) {
@@ -72,7 +126,9 @@
             }
             return time
         },
-        // 第二级 星期
+        /**
+         * 第二级 星期
+         */
         weeks: function (array, parent) {
             var weeks = document.createDocumentFragment();
             for (var index = 0; index < array.length; index++) {
@@ -82,13 +138,15 @@
                 div.dataset.orderDate = element.orderDate;
                 div.dataset.timesId = parent;
                 div.classList.add('drag-cell-td');
-                //第三级 患者    
+                //第三级 患者
                 div.appendChild(this.patients(element.children, element, div));
                 weeks.appendChild(div);
             }
             return weeks;
         },
-        // 第三级 患者 
+        /**
+         * 第三级 患者
+         */
         patients: function (array, time, parentOjb) {
             // 今天的日期 精确到天
             var todayLocal = new Date().toLocaleDateString(),
@@ -98,12 +156,14 @@
                 // 患者碎片容器
                 patients = document.createDocumentFragment(),
                 _this = this;
+
             for (var index = 0; index < array.length; index++) {
                 var element = array[index];
                 var p = document.createElement('p');
                 if (element.patientId == this.params.options.patientId) {
                     p.classList.add('current-patient');
                 }
+                p.classList.add(_this.getFixWay(element.fixWay));
                 p.dataset.data = JSON.stringify(element);
                 p.innerHTML = element.name + ' ' + element.fixWay;
                 // 今天之前的不容拖动，置灰
@@ -125,23 +185,43 @@
                     }
                 }
             } else {
+                var add = document.createElement('div');
+                add.classList.add('disable-add');
+                add.innerHTML = '+';
+                patients.appendChild(add);
                 parentOjb.dataset.disable = 'false';
             }
 
             return patients;
         },
-        // 保存变动回传数据
+        /**
+         * 获取类型英文 添加对应class样式
+         */
+        getFixWay: function (type) {
+            var getFixWay = [];
+            getFixWay['平扫'] = 'ps';
+            getFixWay['增强'] = 'zq';
+            getFixWay['穿刺'] = 'cc';
+            getFixWay['核野'] = 'hy';
+
+            return getFixWay[type];
+        },
+        /**
+         * 保存变动返回数据
+         */
         saveArray: function (data) {
             var res = this.inArray(this.renderArray, data);
             if (res.status) {
                 this.renderArray.splice(res.index, 1, data);
                 var remove = document.querySelector('[data-mark="' + (data.id + data.fixWay) + '"]');
-                remove.parentNode.removeChild(remove);
+                remove && remove.parentNode.removeChild(remove);
             } else {
                 this.renderArray.push(data);
             }
         },
-        // 检测数组包含
+        /**
+         * 检测数组包含
+         */
         inArray: function (parent, target) {
             var status = false, i;
             for (var index = 0; index < parent.length; index++) {
@@ -157,7 +237,9 @@
                 index: i
             }
         },
-        // 点击加号事件
+        /**
+         * 点击加号事件 创建类型选择弹出框
+         */
         addClick: function (event, addOjb) {
             var e = event || window.event,
                 _this = this;
@@ -182,10 +264,17 @@
 
             dragAddMenu.onmousedown = null;
             // 点击选择类型
-            dragAddMenu.onmousedown = function () {
+            dragAddMenu.onmousedown = function (event) {
+                var e = event || window.event;
+                var el = e.target || e.srcElement;
+                if (el.nodeName != 'P') {
+                    return
+                }
+
                 var res = _this.chooseType();
                 var p = document.createElement('p');
-                p.classList.add('current-patient');
+                p.classList.add('current-patient', _this.getFixWay(res));
+
                 var data = {
                     id: undefined,
                     name: _this.params.options.name,
@@ -211,14 +300,17 @@
                 p.innerHTML = data.name + ' ' + res;
                 addOjb.parentNode.appendChild(p);
                 _this.hide(this);
+
+                // 显示选中文本
+                // var selectedEle = document.querySelector('#selectText');
+                // console.log(selectedEle)
+                // selectedEle.innerText = '已选中：' + data.name + ' ' + data.fixWay + ' ' + data.orderDate + ' ' + data.week + ' ' + addOjb.parentNode.dataset.timesId;
             }
 
         },
-        // 是否有这个元素
-        hasElement: function (par, tar) {
-            // par 
-        },
-        // 选择类型
+        /**
+         * 选择类型数据 返回中文
+         */
         chooseType: function (event) {
             var e = event || window.event;
             e.preventDefault();
@@ -226,23 +318,35 @@
 
             var el = e.target || e.srcElement;
             return el.dataset.fixway;
-
         },
-        // 显示
+        /**
+         * 显示
+         */
         show: function (obj) {
             obj.style.display = 'block';
         },
-        // 隐藏
+        /**
+         * 隐藏
+         */
         hide: function (obj) {
             obj.style.display = 'none';
         },
-        // 拖拽事件绑定
+        /**
+         * 清除选中
+         */
+        clearActive: function (params, el) {
+            var dragTable = document.querySelector('.' + params.id.substr(1));
+            var ps = dragTable.querySelectorAll('li div p');
+            for (var index = 0; index < ps.length; index++) {
+                var item = ps[index];
+                item.classList.remove('active');
+            }
+            el && el.classList && el.classList.add('active');
+        },
+        /**
+         * 拖拽事件绑定
+         */
         bindEvent: function (params, renderTpl) {
-            // if (!params.dragable) {
-            //     document.onmousedown = null;
-            //     document.onmouseup = null;
-            //     return false;
-            // }
             var _this = this,
                 moveOjb = null,
                 // 记录初始位置
@@ -252,13 +356,20 @@
                 // 拖拽状态
                 dragStatus = false;
 
-            // 按下
+            /**
+             * 
+             * 按下 
+             */
             document.onmousedown = function (e) {
                 var dragAddMenu = document.querySelector('.dragable-add-menu');
                 dragAddMenu && _this.hide(dragAddMenu);
                 // 不是p，禁止右键操作
                 var el = e.target || e.srcElement;
-                if (el.classList == 'add') {
+                // 选中
+                _this.clearActive(el);
+
+                // 点击加号
+                if (el.classList.contains('add')) {
                     // 点击加号按钮
                     _this.addClick.call(_this, event, el);
                     return;
@@ -284,7 +395,10 @@
                 }
             }
 
-            // 松开
+            /**
+             * 
+             * 松开
+             */
             document.onmouseup = function (e) {
                 var el = e.target || e.srcElement,
                     data = null,
@@ -364,14 +478,18 @@
             }
 
         },
-        // 格式化子集
+        /**
+         * 格式化子集
+         */
         childrenIndex: function (array, data) {
             for (var index = 0; index < array.length; index++) {
                 var element = array[index];
                 element.dataset.index = index;
             }
         },
-        // 数据打包
+        /**
+         * 数据打包
+         */
         package: function () {
             var renderTpl = document.querySelector(this.params.id),
                 data = {};
@@ -396,31 +514,63 @@
                 }
 
             }
-
             return data;
 
         },
-        // 更新数据
+        /**
+         * 更新数据
+         */
         update: function (params) {
             this.params = params;
-            this.init(this.params);
+            this.init(params);
         },
+        /**
+         * 保存数据
+         */
+        save: function (params) {
+            var res = this.renderArray;
+            this.renderArray = [];
+            return res;
+        },
+        /**
+         * 清空数据
+         */
+        cancel: function (params) {
+            this.renderArray = [];
+        },
+        /**
+         * 默认创建样式表
+         */
         createStyle: function (params) {
             var style = document.createElement('style'),
                 str = '';
-            str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 14px;}';
-            str += '.drag-table {user-select: none;}';
+            str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 16px;}';
+            str += '.drag-table {user-select: none;color:#333;}';
             str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;}';
             str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
-            str += '.drag-table li.thead div,.drag-table li span {display: block;padding: 10px;}';
+            str += '.drag-table li.thead div{color:#333}';
+            str += '.drag-table li.thead div i{margin-left:4px;font-style:normal;}';
+            str += '.drag-table li.thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
             str += '.drag-table ul li {display: flex;justify-content: space-between;}';
-            str += '.drag-table li>div {position: relative;width: 12.5%;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom: 30px;}';
-            str += '.drag-table li>div .add {position: absolute;left: 0px;bottom: 0px;width: 100%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;}';
-            str += '.drag-table li>div .add:hover,.dragable-add-menu p:hover {background: #eee;}';
-            str += '.drag-table li p {padding: 10px;border-bottom: 1px solid #ccc;font-size: 12px;}';
+            str += '.drag-table li>div {position: relative;display:flex;align-items:flex-start;justify-content:center;flex-wrap:wrap;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;}';
+            str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 0px;bottom: 0px;width: 100%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;}';
+            str += '.drag-table li>div .disable-add {border-top:1px dotted #ccc;color:#ccc;background:transparent;}';
+            str += '.dragable-add-menu p:hover {background: #eee;}';
+            str += '.drag-table li p {width:94%;padding:4px 10px;margin-bottom:4px;font-size: 16px;text-align:center;border-radius:4px;}';
             str += '.drag-table li p:last-child {border: 0;}';
             str += '.drag-table li p[data-disable="false"] {background: #eee;}';
             str += '.drag-table .current-patient {background: #06b;color:#fff;}';
+            str += '.drag-table .typeBlock {display:flex;justify-content:flex-end;padding: 10px 0;}';
+            str += '.drag-table .typeBlock>div {display:flex;justify-content:space-between;align-items:center;}';
+            str += '.drag-table .typeBlock i {width:14px;height:14px;margin:0 9px 0 20px;border-radius:3px;}';
+            str += '.drag-table .ps {background: #F1AA45!important;color:#fff;}';
+            str += '.drag-table .ps.active {background: #CC8B2F!important;}';
+            str += '.drag-table .zq {background: #4E8EF3!important;color:#fff;}';
+            str += '.drag-table .zq.active {background: #3E71C2!important;}';
+            str += '.drag-table .cc {background: #E47375!important;color:#fff;}';
+            str += '.drag-table .cc.active {background: #cc6062!important;color:#fff;}';
+            str += '.drag-table .hy {background: #26A163!important;color:#fff;}';
+            str += '.drag-table .hy.active {background: #1F804F!important;}';
             str += '.dragable-add-menu {border: 1px solid #ccc;background: #fff;box-shadow: 1px 2px 4px #ccc;}';
             str += '.dragable-add-menu p {padding: 10px;border-bottom: 1px solid #ccc;cursor: pointer;}';
             if (style.styleSheet) {
@@ -429,14 +579,6 @@
                 style.innerHTML = str;
             }
             return style;
-        },
-        save: function (params) {
-            var res = this.renderArray;
-            this.renderArray = [];
-            return res;
-        },
-        cancel: function (params) {
-            this.renderArray = [];
         }
     }
 

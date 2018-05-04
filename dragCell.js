@@ -74,7 +74,7 @@
             var typeBlock = document.createElement('div');
             typeBlock.classList.add('typeBlock');
             typeBlock.innerHTML += '<div><i class="ps"></i>平扫</div>';
-            typeBlock.innerHTML += '<div><i class="zq"></i>增强</div>';
+            typeBlock.innerHTML += '<div><i class="zq"></i>增强CT</div>';
             typeBlock.innerHTML += '<div><i class="cc"></i>穿刺</div>';
             typeBlock.innerHTML += '<div><i class="hy"></i>核野</div>';
             return typeBlock;
@@ -151,9 +151,9 @@
             // 今天的日期 精确到天
             var todayLocal = new Date().toLocaleDateString(),
                 today = new Date(todayLocal).getTime(),
-                // 当前列日期 精确到天
+            // 当前列日期 精确到天
                 parentTime = new Date(time.orderDate).getTime(),
-                // 患者碎片容器
+            // 患者碎片容器
                 patients = document.createDocumentFragment(),
                 _this = this;
 
@@ -200,7 +200,7 @@
         getFixWay: function (type) {
             var getFixWay = [];
             getFixWay['平扫'] = 'ps';
-            getFixWay['增强'] = 'zq';
+            getFixWay['增强CT'] = 'zq';
             getFixWay['穿刺'] = 'cc';
             getFixWay['核野'] = 'hy';
 
@@ -251,7 +251,7 @@
                 dragAddMenu = document.createElement('div');
                 dragAddMenu.classList.add('dragable-add-menu');
                 dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="平扫">平扫</p>';
-                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="增强">增强</p>';
+                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="增强CT">增强CT</p>';
                 dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="穿刺">穿刺</p>';
                 dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="核野">核野</p>';
                 document.querySelector('body').appendChild(dragAddMenu);
@@ -349,16 +349,16 @@
         bindEvent: function (params, renderTpl) {
             var _this = this,
                 moveOjb = null,
-                // 记录初始位置
+            // 记录初始位置
                 defaultParent = null,
-                // 记录初始索引
+            // 记录初始索引
                 defaultIndex = 0,
-                // 拖拽状态
+            // 拖拽状态
                 dragStatus = false;
 
             /**
-             * 
-             * 按下 
+             *
+             * 按下
              */
             document.onmousedown = function (e) {
                 var dragAddMenu = document.querySelector('.dragable-add-menu');
@@ -396,7 +396,7 @@
             }
 
             /**
-             * 
+             *
              * 松开
              */
             document.onmouseup = function (e) {
@@ -520,9 +520,9 @@
         /**
          * 更新数据
          */
-        update: function (params) {
-            this.params = params;
-            this.init(params);
+        update: function (oldValue, newValue) {
+            this.params = newValue;
+            this.create(newValue);
         },
         /**
          * 保存数据
@@ -552,11 +552,11 @@
             str += '.drag-table li.thead div i{margin-left:4px;font-style:normal;}';
             str += '.drag-table li.thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
             str += '.drag-table ul li {display: flex;justify-content: space-between;}';
-            str += '.drag-table li>div {position: relative;display:flex;align-items:flex-start;justify-content:center;flex-wrap:wrap;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;}';
+            str += '.drag-table li>div {position: relative;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;text-align:center;}';
             str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 0px;bottom: 0px;width: 100%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;}';
             str += '.drag-table li>div .disable-add {border-top:1px dotted #ccc;color:#ccc;background:transparent;}';
             str += '.dragable-add-menu p:hover {background: #eee;}';
-            str += '.drag-table li p {width:94%;padding:4px 10px;margin-bottom:4px;font-size: 16px;text-align:center;border-radius:4px;}';
+            str += '.drag-table li p {display:inline-block;width:94%;padding:4px 10px;margin-bottom:4px;font-size: 16px;text-align:center;border-radius:4px;}';
             str += '.drag-table li p:last-child {border: 0;}';
             str += '.drag-table li p[data-disable="false"] {background: #eee;}';
             str += '.drag-table .current-patient {background: #06b;color:#fff;}';

@@ -7,7 +7,7 @@
 <br>
 <br>
 
-# page.js   翻页插件
+## page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)
 
 ### 调用方法
@@ -275,6 +275,24 @@ w.onload = function () {
     
 
 ## myPlugins.js     我的插件集
+
+/**<br>
+ * Created by fuzhen on 16/9/7. <br>
+ * 此插件集成了以下功能：<br>
+ * 1、邮箱、账号、手机号，非空及格式校验<br>
+ * 2、模拟placeholder兼容ie9以下<br>
+ * 3、select选择切换时的选中高亮显示效果<br>
+ * 4、canvas画圆，显示百分比圆<br>
+ * 5、初始化00000到具体数字及字符的有序翻滚动画效果<br>
+ * 6、选项前后比较大小校验，以及submit时校验<br>
+ * 7、获取cookie<br>
+ * 8、设置cookie<br>
+ * 9、勾选记住账号<br>
+ * 10、底部跟随 or 固定<br>
+ * 11、关键词标红<br>
+ */<br>
+
+
 myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 ### 调用方法
@@ -282,6 +300,7 @@ myPlugins自己整合的一个自己日常使用的插件集合，日后还会�
 myPlugins.方法名();
 
 ## foQuery.js       我的框架demo
+
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
 ### 自定义插件调用方法

@@ -94,7 +94,7 @@ var dc = new DragCell({
 ### 扩展方法
 
 //数据更新 <br>
-dc.update({
+dc.update({  `更新数据时，接口形式保持完整形式`
 
     data: api2,  //数据接口
     id: '#table', //指定模板
@@ -108,6 +108,9 @@ dc.update({
     style: false  //默认创建样式
 
 })
+
+var res =  dc.save()  `获取已操作的数据`
+var res =  dc.cancel()  `清空已选择的操作数据`
 
 ### 接口格式
 

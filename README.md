@@ -5,6 +5,7 @@
 
 // 弹窗 <br>
 var pop = new Popup({
+
     id: 'dialog',  `指定模板id`
     class: 'mypop', `自定义样式类`
     width: 1200, `设定宽度`
@@ -38,14 +39,15 @@ var pop = new Popup({
         this.hide();
     },
     style: true  `默认样式`
+    
 }).show();
 
 ### 扩展方法
 
-pop.show()  `弹窗显示`
-pop.show()  `弹窗关闭`
-pop.shown()  `弹窗淡入`
-pop.hidden()  `弹窗淡出`
+pop.show()  `弹窗显示` <br>
+pop.show()  `弹窗关闭` <br>
+pop.shown()  `弹窗淡入` <br>
+pop.hidden()  `弹窗淡出` <br>
 
 
 # drageCell.js   拖拽单元格插件

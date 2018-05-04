@@ -4,6 +4,7 @@
 ### 调用方法
 
 new Pages({
+    
     border: '1px solid #ccc',
     borderRadius: '3px',
     fontColor: '#333',

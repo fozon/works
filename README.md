@@ -4,7 +4,10 @@
 ### 调用方法
 
 new Pages({
-
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+    fontColor: '#333',
+    activeColor: '#fff',
     options: {   //options唯一的参数，包含默认走ajax，如果设置jsonp，则jsonp
         url: 'http://is.allcure.cn/register/uploadfile',
         data: {
@@ -21,7 +24,7 @@ new Pages({
             console.log(xml, 2222222222)
         }
     }
-    
+
 })
 
 # pop.js   弹窗插件

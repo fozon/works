@@ -1,12 +1,10 @@
-# drageCell.js
-拖拽单元格插件
+# drageCell.js 拖拽单元格插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
-//调用方法
+### 调用方法
 
-// 默认加载接口
-
+// 默认加载接口 <br>
 var dc = new DragCell({
 
     data: api,  //数据接口
@@ -22,9 +20,9 @@ var dc = new DragCell({
 
 })
 
-//扩展方法
+//扩展方法 <br>
 
-//数据更新
+//数据更新 <br>
 dc.update({
 
     data: api2,  //数据接口

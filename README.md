@@ -148,8 +148,8 @@ dc.update({  `更新数据时，接口形式保持完整形式`
 
 })<br>
 
-var res =  dc.save()  `获取已操作的数据`<br>
-var res =  dc.cancel()  `清空已选择的操作数据`<br>
+dc.save()  `获取已操作的数据`<br>
+dc.cancel()  `清空已选择的操作数据`<br>
 
 #### 接口格式
 
@@ -276,7 +276,7 @@ w.onload = function () {
 
 ## myPlugins.js     我的插件集
 
-/**<br>
+
  * Created by fuzhen on 16/9/7. <br>
  * 此插件集成了以下功能：<br>
  * 1、邮箱、账号、手机号，非空及格式校验<br>
@@ -290,34 +290,30 @@ w.onload = function () {
  * 9、勾选记住账号<br>
  * 10、底部跟随 or 固定<br>
  * 11、关键词标红<br>
- **/<br>
+
 
 
 myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 #### 调用方法
 
-myPlugins.方法名();
+myPlugins.方法名(参数);
 
 ## foQuery.js       我的框架demo
 
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
-#### 自定义插件调用方法
+#### 插件扩充
 
-$f.fn.text() = function(){
-	console.log($fo(this));
-}
+$f.fn.text() = function(){<br>
+    console.log($fo(this)); <br>
+}<br>
 
 #### 调用方法
 
-$fo('li').each(function(){
-
-    $fo(this).click(function(){
-  
-        $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');
-    
-    })
-  
-})
+$fo('li').each(function(){<br>
+    $fo(this).click(function(){<br>
+        $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');<br>
+    })<br>
+})<br>
 

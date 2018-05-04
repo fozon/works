@@ -1,3 +1,53 @@
+# pop.js   弹窗插件
+![image](https://github.com/fozon/works/blob/master/static/m1.png)
+
+### 调用方法
+
+// 弹窗 <br>
+var pop = new Popup({
+    id: 'dialog',  `指定模板id`
+    class: 'mypop', `自定义样式类`
+    width: 1200, `设定宽度`
+    height: 600, `指定高度`
+    title: '新增预约', `弹窗title`
+    buttons: [  `弹窗的按钮集，包含按钮的自定义样式和点击后的event回调事件`
+        {
+            class: 'ok',
+            title: '确定',
+            background: '#999999',
+            color: '#fff',
+            event: function (params) {
+                // render为返回打包的json数据
+                var render = dc.save();
+                document.querySelector('#result').innerHTML = JSON.stringify(render);
+                dc.save();
+            }
+        },
+        {
+            class: 'cancel',
+            title: '取消',
+            background: '#3B5999',
+            color: '#fff',
+            event: function (params) {
+                dc.cancel();
+                this.hide();
+            }
+        },
+    ],
+    closeEvent: function (params) {  `关闭按钮事件`
+        this.hide();
+    },
+    style: true  `默认样式`
+}).show();
+
+### 扩展方法
+
+pop.show()  `弹窗显示`
+pop.show()  `弹窗关闭`
+pop.shown()  `弹窗淡入`
+pop.hidden()  `弹窗淡出`
+
+
 # drageCell.js   拖拽单元格插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)

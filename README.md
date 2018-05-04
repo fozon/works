@@ -1,3 +1,7 @@
+# 个人网站 fozon1984
+
+[小牛石头 fozon1984](http://www.fozon1984.cn)
+
 # page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)
 
@@ -10,7 +14,7 @@ new Pages({
     fontColor: '#333',
     activeColor: '#fff',
     options: {   //options唯一的参数，包含默认走ajax，如果设置jsonp，则jsonp
-        url: 'http://is.allcure.cn/register/uploadfile',
+        url: 'http://www.fozon1984.cn/register/uploadfile',
         data: {
             pages: 10,
             total: 24,

@@ -39,7 +39,7 @@ var pop = new Popup({
         this.hide();
     },
     style: true  `默认样式`
-    
+
 }).show();
 
 ### 扩展方法
@@ -48,6 +48,25 @@ pop.show()  `弹窗显示` <br>
 pop.show()  `弹窗关闭` <br>
 pop.shown()  `弹窗淡入` <br>
 pop.hidden()  `弹窗淡出` <br>
+pop.update({   `更新弹窗按钮和title`
+
+    title: '预约修改',
+    buttons: [
+        {
+            class: 'ok',
+            title: '测试',
+            background: '#999999',
+            color: '#fff',
+            event: function (params) {
+                // render为返回打包的json数据
+                console.log(this);
+                this.hide()
+
+            }
+        }
+    ]
+
+})
 
 
 # drageCell.js   拖拽单元格插件

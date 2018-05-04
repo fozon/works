@@ -1,3 +1,29 @@
+# pop.js   翻页插件
+![image](https://github.com/fozon/works/blob/master/static/pages.png)
+
+### 调用方法
+
+new Pages({
+
+    options: {   //options唯一的参数，包含默认走ajax，如果设置jsonp，则jsonp
+        url: 'http://is.allcure.cn/register/uploadfile',
+        data: {
+            pages: 10,
+            total: 24,
+            abc: 111
+        },
+        type: 'post',
+        jsonp: 'callback',
+        success: function (res) {  //请求成功回调
+            console.log(res, 111111111)
+        },
+        error: function (xml) { //请求失败回调
+            console.log(xml, 2222222222)
+        }
+    }
+    
+})
+
 # pop.js   弹窗插件
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
@@ -107,10 +133,10 @@ dc.update({  `更新数据时，接口形式保持完整形式`
     },
     style: false  //默认创建样式
 
-})
+})<br>
 
-var res =  dc.save()  `获取已操作的数据`
-var res =  dc.cancel()  `清空已选择的操作数据`
+var res =  dc.save()  `获取已操作的数据`<br>
+var res =  dc.cancel()  `清空已选择的操作数据`<br>
 
 ### 接口格式
 

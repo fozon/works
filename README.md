@@ -181,11 +181,11 @@ $f.fn.text() = function(){
 
 $fo('li').each(function(){
 
-  $fo(this).click(function(){
+    $fo(this).click(function(){
   
-    $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');
+        $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');
     
-  })
+    })
   
 })
 

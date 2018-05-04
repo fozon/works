@@ -1,6 +1,8 @@
 # drageCell.js
 拖拽单元格插件
 
+![图片展示] (https://github.com/fozon/works/blob/master/m1.png?raw=true);
+
 //调用方法
 
 // 默认加载接口

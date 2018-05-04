@@ -1,4 +1,4 @@
-# drageCell.js 拖拽单元格插件
+# drageCell.js   拖拽单元格插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
@@ -20,7 +20,7 @@ var dc = new DragCell({
 
 })
 
-//扩展方法 <br>
+### 扩展方法
 
 //数据更新 <br>
 dc.update({
@@ -38,9 +38,9 @@ dc.update({
 
 })
 
-//接口格式
+### 接口格式
 
-// 接口
+// 接口 <br>
 var api = {
 
     "8:00-9:00": [
@@ -138,10 +138,10 @@ var api = {
     
 }
 
-# pageMaxLimit.js
+# pageMaxLimit.js   翻页限制
 原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰
 
-//调用方法
+### 调用方法
 
 w.onload = function () {
 
@@ -161,23 +161,23 @@ w.onload = function () {
 
     
 
-# myPlugins.js
+# myPlugins.js   我的插件集
 myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
-//调用方法
+### 调用方法
 
 myPlugins.方法名();
 
-# foQuery.js
+# foQuery.js   我的框架demo
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
-//自定义插件调用方法
+### 自定义插件调用方法
 
 $f.fn.text() = function(){
 	console.log($fo(this));
 }
 
-//调用方法
+### 调用方法
 
 $fo('li').each(function(){
 

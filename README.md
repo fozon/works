@@ -1,6 +1,6 @@
 ## 个人网站 fozon1984.cn
 
-欢迎访问我的网站[http://www.fozon1984.cn](http://www.fozon1984.cn)
+欢迎访问我的网站 [http://www.fozon1984.cn](http://www.fozon1984.cn)
 
 <br>
 <br>
@@ -37,7 +37,7 @@ new Pages({
 
 })
 
-# pop.js   弹窗插件
+## pop.js   弹窗插件
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
 ### 调用方法
@@ -108,7 +108,7 @@ pop.update({   `更新弹窗按钮和title`
 })
 
 
-# drageCell.js   拖拽单元格插件
+## drageCell.js   拖拽单元格插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
@@ -251,7 +251,7 @@ var api = {
     
 }
 
-# pageMaxLimit.js   翻页限制
+## pageMaxLimit.js      翻页限制
 原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰
 
 ### 调用方法
@@ -274,14 +274,14 @@ w.onload = function () {
 
     
 
-# myPlugins.js   我的插件集
+## myPlugins.js     我的插件集
 myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 ### 调用方法
 
 myPlugins.方法名();
 
-# foQuery.js   我的框架demo
+## foQuery.js       我的框架demo
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
 ### 自定义插件调用方法

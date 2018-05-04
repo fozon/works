@@ -256,21 +256,14 @@ var api = {
 
 #### 调用方法
 
-w.onload = function () {
-
-        var goPage = new GoPage();
-
-        if (goPage.goPageBtn) {
-
-            goPage.init();
-
-            goPage.goPageBtn.onclick = goPage.clickEvent.bind(goPage);
-
-            goPage.goPageId.onkeyup = goPage.keyupEvent.bind(goPage);
-
-        }
-
-    };
+* w.onload = function () {
+    * var goPage = new GoPage();
+    * if (goPage.goPageBtn) {
+        * goPage.init();
+        * goPage.goPageBtn.onclick = goPage.clickEvent.bind(goPage);
+        * goPage.goPageId.onkeyup = goPage.keyupEvent.bind(goPage);
+    * }
+* };
 
     
 
@@ -293,11 +286,11 @@ w.onload = function () {
 
 
 
-myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
+* myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
 #### 调用方法
 
-myPlugins.方法名(参数);
+* myPlugins.方法名(参数);
 
 ## foQuery.js       我的框架demo
 

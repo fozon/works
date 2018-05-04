@@ -15,9 +15,28 @@ var dc = new DragCell({
     options: {
         patientId: '999', //患者id
         orderWaitRoom: '100', //诊室id
-        name: '哈哈' //患者姓名
+        name: '哈哈' //患者姓名,
+        startTime: '2018-04-23' //生成当前周 对应的时间
     },
     style: true  //默认创建样式
+
+})
+
+//扩展方法
+
+//数据更新
+dc.update({
+
+    data: api2,  //数据接口
+    id: '#table', //指定模板
+    dragable: true, //是否拖拽
+    options: {
+        patientId: '999', //患者id
+        orderWaitRoom: '100', //诊室id
+        name: '哈哈' //患者姓名,
+        startTime: '2018-04-29' //生成当前周 对应的时间
+    },
+    style: false  //默认创建样式
 
 })
 

@@ -10,7 +10,7 @@
 ## page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)
 
-### 调用方法
+#### 调用方法
 
 new Pages({
 
@@ -40,7 +40,7 @@ new Pages({
 ## pop.js   弹窗插件
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
-### 调用方法
+#### 调用方法
 
 // 弹窗 <br>
 var pop = new Popup({
@@ -81,7 +81,7 @@ var pop = new Popup({
 
 }).show();
 
-### 扩展方法
+#### 扩展方法
 
 pop.show()  `弹窗显示` <br>
 pop.show()  `弹窗关闭` <br>
@@ -112,7 +112,7 @@ pop.update({   `更新弹窗按钮和title`
 
 ![image](https://github.com/fozon/works/blob/master/static/m1.png)
 
-### 调用方法
+#### 调用方法
 
 // 默认加载接口 <br>
 var dc = new DragCell({
@@ -130,7 +130,7 @@ var dc = new DragCell({
 
 })
 
-### 扩展方法
+#### 扩展方法
 
 //数据更新 <br>
 dc.update({  `更新数据时，接口形式保持完整形式`
@@ -151,7 +151,7 @@ dc.update({  `更新数据时，接口形式保持完整形式`
 var res =  dc.save()  `获取已操作的数据`<br>
 var res =  dc.cancel()  `清空已选择的操作数据`<br>
 
-### 接口格式
+#### 接口格式
 
 // 接口 <br>
 var api = {
@@ -254,7 +254,7 @@ var api = {
 ## pageMaxLimit.js      翻页限制
 原生点击翻页页数最大数限制功能，输入页数的时候也做最大数限制，以及显示效果置灰
 
-### 调用方法
+#### 调用方法
 
 w.onload = function () {
 
@@ -290,12 +290,12 @@ w.onload = function () {
  * 9、勾选记住账号<br>
  * 10、底部跟随 or 固定<br>
  * 11、关键词标红<br>
- */<br>
+ **/<br>
 
 
 myPlugins自己整合的一个自己日常使用的插件集合，日后还会完善，目前部分动画还依赖JQ
 
-### 调用方法
+#### 调用方法
 
 myPlugins.方法名();
 
@@ -303,13 +303,13 @@ myPlugins.方法名();
 
 foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的实现模式.
 
-### 自定义插件调用方法
+#### 自定义插件调用方法
 
 $f.fn.text() = function(){
 	console.log($fo(this));
 }
 
-### 调用方法
+#### 调用方法
 
 $fo('li').each(function(){
 

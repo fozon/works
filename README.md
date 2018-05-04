@@ -1,6 +1,11 @@
-# 个人网站 fozon1984
+## 个人网站 fozon1984.cn
 
-[小牛石头 fozon1984](http://www.fozon1984.cn)
+欢迎访问我的网站[http://www.fozon1984.cn](http://www.fozon1984.cn)
+
+<br>
+<br>
+<br>
+<br>
 
 # page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)

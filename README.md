@@ -1,7 +1,7 @@
 # drageCell.js
 拖拽单元格插件
 
-![图片展示] (https://github.com/fozon/works/blob/master/m1.png?raw=true);
+![image](https://github.com/fozon/works/blob/master/m1.png)
 
 //调用方法
 

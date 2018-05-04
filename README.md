@@ -305,15 +305,15 @@ foQuery一个类似于jQuery框架的简单demo,主要是展现面向对象的�
 
 #### 插件扩充
 
-$f.fn.text() = function(){<br>
-    console.log($fo(this)); <br>
-}<br>
+* $f.fn.text() = function(){
+    * console.log($fo(this)); 
+* }
 
 #### 调用方法
 
-$fo('li').each(function(){<br>
-    $fo(this).click(function(){<br>
-        $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');<br>
-    })<br>
-})<br>
+* $fo('li').each(function(){
+    * $fo(this).click(function(){
+        * $fo(this).addClass('color').attr('title','hello').siblings().removeClass('color').removeAttr('title');<br>
+    * })
+* })
 

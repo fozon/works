@@ -117,19 +117,19 @@ pop.update({   `更新弹窗按钮和title`
 // 默认加载接口 <br>
 var dc = new DragCell({
 
-    data: api,  //数据接口
+    data: api,  //数据接口 获取所有患者信息
     id: '#table', //指定模板
     width: '100%', //数据列表的宽度 默认auto
     height: 650,  //数据列表的高度 默认auto
-    dragable: true, //为true只能拖拽无添加按钮 or 不能拖拽有添加按钮 !!!不配置这个选项，默许为false
-    globalClose: true, //为true表示开启全局关闭操作功能，即：不能拖拽，不能添加 !!!不配置这个选项，默许为false
-    patientModify: true, //为true表示开启修改权限功能, 即：只能修改匹配patientId的选项 !!!不配置这个选项，默许为false
+    dragable: true, //为true只能拖拽无添加按钮 or 不能拖拽有添加按钮。  !!!注意：不配置这个选项，默许为false
+    globalClose: true, //为true表示开启全局关闭操作功能，即：不能拖拽，不能添加。   !!!注意：不配置这个选项，默许为false
+    patientModify: true, //为true表示开启修改权限功能, 即：只能修改匹配patientId的选项  !!!注意：不配置这个选项，默许为false
     options: {
-        patientId: '999', //患者id
-        orderWaitRoom: '100', //诊室id
-        name: '哈哈' //患者姓名,
-        startTime: '2018-04-23', //生成当前周 对应的初始时间,
-        selectFixWay: '平扫' //当前patientId的需要修改的当前类型 !!!patientModify为true时生效
+        patientId: '999', //当前患者id
+        orderWaitRoom: '100', //当前诊室id
+        name: '哈哈', //当前患者姓名,
+        startTime: '2018-04-23', //生成当前周需要的起始时间, 即：thead区域显示的周日期内容
+        selectFixWay: '平扫' //当前patientId的需要修改的当前类型 !!!注意：patientModify为true时生效
     },
     style: true  //默认创建样式
 

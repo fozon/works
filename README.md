@@ -74,7 +74,7 @@ var pop = new Popup({
             }
         },
     ],
-    closeEvent: function (params) {  `关闭按钮事件`
+    closeEvent: function (params) {  `关闭X按钮回调事件`
         this.hide();
     },
     style: true  `默认样式`
@@ -84,7 +84,7 @@ var pop = new Popup({
 #### 扩展方法
 
 pop.show()  `弹窗显示` <br>
-pop.show()  `弹窗关闭` <br>
+pop.hide()  `弹窗关闭` <br>
 pop.shown()  `弹窗淡入` <br>
 pop.hidden()  `弹窗淡出` <br>
 pop.update({   `更新弹窗按钮和title`

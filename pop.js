@@ -26,6 +26,9 @@
             pop.classList.add('popup', params.class);
             pop.style.cssText = '';
             pop.style.display = 'none';
+            pop.style.width = typeof params.width === 'number' ? params.width + 'px' : params.width && params.width.indexOf('%') > -1 ? params.width : 'auto';
+            pop.style.height = typeof params.height === 'number' ? params.height + 'px' : params.height && params.height.indexOf('%') > -1 ? params.height : 'auto';
+
 
             var masking = this.masking;
             masking.classList.add('masking');
@@ -40,11 +43,15 @@
             // 底部
             pop.appendChild(this.footer(params));
 
+            // 默认样式
             if (params.style) {
                 body.appendChild(this.createStyle(params));
             }
 
+            // 添加遮罩层
             body.appendChild(masking);
+
+            // 添加弹窗
             body.appendChild(pop);
         },
         createStyle: function (params) {

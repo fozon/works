@@ -5,6 +5,9 @@
     function DragCell(params) {
         this.params = params || {};
         this.renderArray = [];
+        this.getCurrentPatientTypes = {};
+
+        //自动初始化调用
         this.init(this.params);
     }
 
@@ -41,6 +44,9 @@
             };
 
             renderTpl.classList.add('drag-table', params.id.substr(1));
+
+            renderTpl.style.width = typeof this.params.width === 'number' ? this.params.width + 'px' : this.params.width && this.params.width.indexOf('%') > -1 ? this.params.width : 'auto';
+            renderTpl.style.height = typeof this.params.height === 'number' ? this.params.height + 'px' : this.params.height && this.params.height.indexOf('%') > -1 ? this.params.height : 'auto';
 
             // 创建模板
             ul.appendChild(lis);
@@ -107,6 +113,10 @@
             return li;
         },
         /**
+         * 获取当前匹配id的类型数组
+         */
+
+        /**
          * 第一级 时刻
          */
         times: function (object) {
@@ -151,30 +161,53 @@
             // 今天的日期 精确到天
             var todayLocal = new Date().toLocaleDateString(),
                 today = new Date(todayLocal).getTime(),
-            // 当前列日期 精确到天
+                // 当前列日期 精确到天
                 parentTime = new Date(time.orderDate).getTime(),
-            // 患者碎片容器
+                // 患者碎片容器
                 patients = document.createDocumentFragment(),
-                _this = this;
+                _this = this,
+                currentTypes = [];
+
+
 
             for (var index = 0; index < array.length; index++) {
                 var element = array[index];
                 var p = document.createElement('p');
-                if (element.patientId == this.params.options.patientId) {
-                    p.classList.add('current-patient');
+
+                if (this.params.patientModify) {
+                    if ((element.patientId == this.params.options.patientId) && (this.params.options.selectFixWay == element.fixWay)) {
+                        p.classList.add('current-patient');
+                    } else {
+                        p.dataset.disable = 'false';
+                    }
+
+                } else {
+                    if (element.patientId == this.params.options.patientId) {
+                        p.classList.add('current-patient');
+                        currentTypes.push(element.fixWay);
+
+                        //检测当天类型是否重复，而不是某一段的四种类型
+                        if (this.getCurrentPatientTypes[time.orderDate] && this.getCurrentPatientTypes[time.orderDate].length) {
+                            currentTypes.concat(this.getCurrentPatientTypes[time.orderDate]);
+                        } else {
+                            this.getCurrentPatientTypes[time.orderDate] = currentTypes;
+
+                        }
+                    }
                 }
+
                 p.classList.add(_this.getFixWay(element.fixWay));
                 p.dataset.data = JSON.stringify(element);
                 p.innerHTML = element.name + ' ' + element.fixWay;
-                // 今天之前的不容拖动，置灰
-                if (parentTime < today) {
+                // 今天之前的不容拖动，置灰  设置全局关闭 置灰
+                if (parentTime < today || this.params.globalClose) {
                     p.dataset.disable = 'false';
                 }
                 patients.appendChild(p);
             }
             // 如果今天之后的给与操作
             if (parentTime >= today) {
-                if (!this.params.dragable) {
+                if (!this.params.dragable && !this.params.globalClose) {
                     var add = document.createElement('div');
                     add.classList.add('add');
                     add.innerHTML = '+';
@@ -184,12 +217,6 @@
                         week: time.week
                     }
                 }
-            } else {
-                var add = document.createElement('div');
-                add.classList.add('disable-add');
-                add.innerHTML = '+';
-                patients.appendChild(add);
-                parentOjb.dataset.disable = 'false';
             }
 
             return patients;
@@ -272,6 +299,11 @@
                 }
 
                 var res = _this.chooseType();
+                if (_this.getCurrentPatientTypes[addOjb.parentNode.dataset.orderDate] && _this.getCurrentPatientTypes[addOjb.parentNode.dataset.orderDate].indexOf(res) > -1) {
+                    alert('预约类型不能重复添加！');
+                    return;
+                }
+
                 var p = document.createElement('p');
                 p.classList.add('current-patient', _this.getFixWay(res));
 
@@ -349,11 +381,11 @@
         bindEvent: function (params, renderTpl) {
             var _this = this,
                 moveOjb = null,
-            // 记录初始位置
+                // 记录初始位置
                 defaultParent = null,
-            // 记录初始索引
+                // 记录初始索引
                 defaultIndex = 0,
-            // 拖拽状态
+                // 拖拽状态
                 dragStatus = false;
 
             /**
@@ -505,7 +537,7 @@
                     var patients = week.querySelectorAll('p');
                     var patientsArray = [];
                     // patients
-                    for (let patientsIndex = 0; patientsIndex < patients.length; patientsIndex++) {
+                    for (var patientsIndex = 0; patientsIndex < patients.length; patientsIndex++) {
                         var patient = patients[patientsIndex];
                         patientsArray.push(patient.dataset.data);
                     }
@@ -545,7 +577,7 @@
             var style = document.createElement('style'),
                 str = '';
             str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 16px;}';
-            str += '.drag-table {user-select: none;color:#333;}';
+            str += '.drag-table {user-select: none;color:#333;overflow-y:auto;}';
             str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;}';
             str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
             str += '.drag-table li.thead div{color:#333}';
@@ -553,14 +585,14 @@
             str += '.drag-table li.thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
             str += '.drag-table ul li {display: flex;justify-content: space-between;}';
             str += '.drag-table li>div {position: relative;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;text-align:center;}';
-            str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 0px;bottom: 0px;width: 100%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;}';
+            str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 3%;bottom: 4px;width: 94%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;border-radius:4px;}';
             str += '.drag-table li>div .disable-add {border-top:1px dotted #ccc;color:#ccc;background:transparent;}';
             str += '.dragable-add-menu p:hover {background: #eee;}';
             str += '.drag-table li p {display:inline-block;width:94%;padding:4px 10px;margin-bottom:4px;font-size: 16px;text-align:center;border-radius:4px;}';
             str += '.drag-table li p:last-child {border: 0;}';
-            str += '.drag-table li p[data-disable="false"] {background: #eee;}';
+            str += '.drag-table li p[data-disable="false"] {background: #eee;cursor:no-drop;}';
             str += '.drag-table .current-patient {background: #06b;color:#fff;}';
-            str += '.drag-table .typeBlock {display:flex;justify-content:flex-end;padding: 10px 0;}';
+            str += '.drag-table .typeBlock {display:flex;justify-content:flex-end;padding: 10px 20px;}';
             str += '.drag-table .typeBlock>div {display:flex;justify-content:space-between;align-items:center;}';
             str += '.drag-table .typeBlock i {width:14px;height:14px;margin:0 9px 0 20px;border-radius:3px;}';
             str += '.drag-table .ps {background: #F1AA45!important;color:#fff;}';
@@ -582,4 +614,4 @@
         }
     }
 
-})(window, document)
+})(window, document);

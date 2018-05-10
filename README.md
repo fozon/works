@@ -119,12 +119,17 @@ var dc = new DragCell({
 
     data: api,  //数据接口
     id: '#table', //指定模板
-    dragable: true, //是否拖拽
+    width: '100%', //数据列表的宽度 默认auto
+    height: 650,  //数据列表的高度 默认auto
+    dragable: true, //为true只能拖拽无添加按钮 or 不能拖拽有添加按钮 !!!不配置这个选项，默许为false
+    globalClose: true, //为true表示开启全局关闭操作功能，即：不能拖拽，不能添加 !!!不配置这个选项，默许为false
+    patientModify: true, //为true表示开启修改权限功能, 即：只能修改匹配patientId的选项 !!!不配置这个选项，默许为false
     options: {
         patientId: '999', //患者id
         orderWaitRoom: '100', //诊室id
         name: '哈哈' //患者姓名,
-        startTime: '2018-04-23' //生成当前周 对应的时间
+        startTime: '2018-04-23', //生成当前周 对应的初始时间,
+        selectFixWay: '平扫' //当前patientId的需要修改的当前类型 !!!patientModify为true时生效
     },
     style: true  //默认创建样式
 
@@ -133,7 +138,7 @@ var dc = new DragCell({
 #### 扩展方法
 
 //数据更新 <br>
-dc.update({  `更新数据时，接口形式保持完整形式`
+dc.update({  `更新数据时，接口形式尽量保持完整形式`
 
     data: api2,  //数据接口
     id: '#table', //指定模板
@@ -142,7 +147,7 @@ dc.update({  `更新数据时，接口形式保持完整形式`
         patientId: '999', //患者id
         orderWaitRoom: '100', //诊室id
         name: '哈哈' //患者姓名,
-        startTime: '2018-04-29' //生成当前周 对应的时间
+        startTime: '2018-04-29', //生成当前周 对应的起始时间
     },
     style: false  //默认创建样式
 

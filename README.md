@@ -110,7 +110,7 @@ pop.update({   `更新弹窗按钮和title`
 
 ## drageCell.js   拖拽单元格插件
 
-![image](https://github.com/fozon/works/blob/master/static/m1.png)
+![image](https://github.com/fozon/works/blob/master/static/m2.png)
 
 #### 调用方法
 
@@ -177,7 +177,7 @@ dc.cancel()  `清空已选择的操作数据`<br>
 
 // 接口 <br>
 var api = {
-    
+
     "08:00-09:00": [
         {
             "week": "星期一",

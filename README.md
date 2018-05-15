@@ -125,11 +125,28 @@ var dc = new DragCell({
     globalClose: true, //为true表示开启全局关闭操作功能，即：不能拖拽，不能添加。   !!!注意：不配置这个选项，默许为false
     patientModify: true, //为true表示开启修改权限功能, 即：只能修改匹配patientId的选项  !!!注意：不配置这个选项，默许为false
     options: {
-        patientId: '999', //当前患者id
-        orderWaitRoom: '100', //当前诊室id
-        name: '哈哈', //当前患者姓名,
-        startTime: '2018-04-23', //生成当前周需要的起始时间, 即：thead区域显示的周日期内容
-        selectFixWay: '平扫' //当前patientId的需要修改的当前类型 !!!注意：patientModify为true时生效
+        // 传进来的患者id
+        patientId: '1223',
+        // 诊室id
+        orderWaitRoom: '诊室1',
+        name: '李四',
+        startTime: '2018-4-26',
+        selectFixWay: '平扫',  //修改类型，当前id当前类型
+        // 点击预约类型添加
+        alertCallback: function (params) {
+            var str = '';
+            switch (flag) {
+                case 0:
+                    str = '预约类型不能重复添加';
+                    break;
+                case 1:
+                    str = '已经超出当前时间范围，不可预约';
+                    break;
+            }
+            alert(str);
+        },
+        // 点击加号菜单内容
+        menu: ['平扫','增强','穿刺','核野']
     },
     style: true  //默认创建样式
 
@@ -160,100 +177,252 @@ dc.cancel()  `清空已选择的操作数据`<br>
 
 // 接口 <br>
 var api = {
-
-    "8:00-9:00": [
-        {
-            "week": "周一",
-            "orderDate": "2018-04-16",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-16",
-                "scheduleTime": "2018-04-16",
-                "week": "周一",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周二",
-            "orderDate": "2018-04-17",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周二",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-17",
-                "scheduleTime": "2018-04-17",
-                "week": "周二",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周三",
-            "orderDate": "2018-04-18",
-            "children": []
-        },
-        {
-            "week": "周四",
-            "orderDate": "2018-04-19",
-            "children": []
-        },
-        {
-            "week": "周五",
-            "orderDate": "2018-04-25",
-            "children": [{
-                "id": 1,
-                "name": "张三",
-                "patientId": "111",
-                "orderDate": "2018-04-25",
-                "scheduleTime": "2018-04-25",
-                "week": "周二",
-                "fixWay": "平扫"
-            },
-            {
-                "id": 2,
-                "name": "李四",
-                "patientId": "222",
-                "orderDate": "2018-04-25",
-                "scheduleTime": "2018-04-25",
-                "week": "周二",
-                "fixWay": "增强"
-            }
-            ]
-        },
-        {
-            "week": "周六",
-            "orderDate": "2018-04-26",
-            "children": []
-        },
-        {
-            "week": "周日",
-            "orderDate": "2018-04-27",
-            "children": []
-        }
-
-    ]
     
+    "08:00-09:00": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": [
+                {
+                    "id": "770",
+                    "name": "a.b",
+                    "orderDate": "2018-05-17",
+                    "fixWay": "平扫",
+                    "scheduleTime": "2018-05-17",
+                    "patientId": "20180503190525",
+                    "week": "星期四",
+                    "medicalStatus": "0"
+                }
+            ]
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ],
+    "09:00-10:00": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": [
+                {
+                    "id": "771",
+                    "name": "a.b",
+                    "orderDate": "2018-05-17",
+                    "fixWay": "增强",
+                    "scheduleTime": "2018-05-17",
+                    "patientId": "20180503190525",
+                    "week": "星期四",
+                    "medicalStatus": "0"
+                }
+            ]
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ],
+    "10:00-11:30": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": ""
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ],
+    "14:00-15:00": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": ""
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ],
+    "15:00-16:00": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": ""
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ],
+    "16:00-16:30": [
+        {
+            "week": "星期一",
+            "orderDate": "2018-05-14",
+            "children": ""
+        },
+        {
+            "week": "星期二",
+            "orderDate": "2018-05-15",
+            "children": ""
+        },
+        {
+            "week": "星期三",
+            "orderDate": "2018-05-16",
+            "children": ""
+        },
+        {
+            "week": "星期四",
+            "orderDate": "2018-05-17",
+            "children": ""
+        },
+        {
+            "week": "星期五",
+            "orderDate": "2018-05-18",
+            "children": ""
+        },
+        {
+            "week": "星期六",
+            "orderDate": "2018-05-19",
+            "children": ""
+        },
+        {
+            "week": "星期日",
+            "orderDate": "2018-05-20",
+            "children": ""
+        }
+    ]
+
 }
 
 ## pageMaxLimit.js      翻页限制

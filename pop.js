@@ -55,9 +55,10 @@
             body.appendChild(pop);
         },
         createStyle: function (params) {
+            
             var style = document.createElement('style'),
                 str = '';
-            str += '.popup{position:absolute;width:' + params.width + 'px;height:' + params.height + 'px;left:50%;top:50%;margin-top:-' + (params.height / 2) + 'px;margin-left:-' + (params.width / 2) + 'px;z-index:1000000;background:#fff;border:1px solid #ccc;box-sizing:border-box;}';
+            str += '.popup{position:absolute;left:50%;top:50%;margin-top:-' + (params.height / 2) + 'px;margin-left:-' + (params.width / 2) + 'px;z-index:1000000;background:#fff;border:1px solid #ccc;box-sizing:border-box;}';
             str += '.popup .header{width:100%;padding:10px;height: 40px;background:#3B5999;color:#fff;box-sizing:border-box;display:flex;justify-content: space-between;z-index:3;}';
             str += '.popup .header i{display:inline-block;width:20px;height:20px;margin-right:10px;vertical-align:middle;}';
             str += '.popup .header .close{cursor:pointer;width:30px;height:30px;position:relative;}';

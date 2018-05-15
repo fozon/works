@@ -20,7 +20,6 @@
             this.create(params);
             this.clearActive = this.clearActive.bind(this, params);
             this.update = this.update.bind(this, params);
-            // this.patients = this.patients.bind(this, params);
         },
         /**
          * 创建节点
@@ -80,7 +79,7 @@
             var typeBlock = document.createElement('div');
             typeBlock.classList.add('typeBlock');
             typeBlock.innerHTML += '<div><i class="ps"></i>平扫</div>';
-            typeBlock.innerHTML += '<div><i class="zq"></i>增强CT</div>';
+            typeBlock.innerHTML += '<div><i class="zq"></i>增强</div>';
             typeBlock.innerHTML += '<div><i class="cc"></i>穿刺</div>';
             typeBlock.innerHTML += '<div><i class="hy"></i>核野</div>';
             return typeBlock;
@@ -174,6 +173,7 @@
                 var element = array[index];
                 var p = document.createElement('p');
 
+                // 是否开启修改当前类型功能
                 if (this.params.patientModify) {
                     if ((element.patientId == this.params.options.patientId) && (this.params.options.selectFixWay == element.fixWay)) {
                         p.classList.add('current-patient');
@@ -188,19 +188,18 @@
 
                         //检测当天类型是否重复，而不是某一段的四种类型
                         if (this.getCurrentPatientTypes[time.orderDate] && this.getCurrentPatientTypes[time.orderDate].length) {
-                            currentTypes.concat(this.getCurrentPatientTypes[time.orderDate]);
-                        } else {
-                            this.getCurrentPatientTypes[time.orderDate] = currentTypes;
-
+                            currentTypes = currentTypes.concat(this.getCurrentPatientTypes[time.orderDate]);
                         }
+                        this.getCurrentPatientTypes[time.orderDate] = currentTypes;
+
                     }
                 }
 
                 p.classList.add(_this.getFixWay(element.fixWay));
                 p.dataset.data = JSON.stringify(element);
                 p.innerHTML = element.name + ' ' + element.fixWay;
-                // 今天之前的不容拖动，置灰  设置全局关闭 置灰
-                if (parentTime < today || this.params.globalClose) {
+                // 今天之前的不容拖动，置灰  设置全局关闭 置灰 如果 === 2 就是就诊结束状态
+                if (parentTime < today || this.params.globalClose || element.medicalStatus === '2') {
                     p.dataset.disable = 'false';
                 }
                 patients.appendChild(p);
@@ -227,7 +226,7 @@
         getFixWay: function (type) {
             var getFixWay = [];
             getFixWay['平扫'] = 'ps';
-            getFixWay['增强CT'] = 'zq';
+            getFixWay['增强'] = 'zq';
             getFixWay['穿刺'] = 'cc';
             getFixWay['核野'] = 'hy';
 
@@ -277,10 +276,17 @@
             if (!dragAddMenu) {
                 dragAddMenu = document.createElement('div');
                 dragAddMenu.classList.add('dragable-add-menu');
-                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="平扫">平扫</p>';
-                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="增强CT">增强CT</p>';
-                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="穿刺">穿刺</p>';
-                dragAddMenu.innerHTML += '<p data-disable="false" data-fixWay="核野">核野</p>';
+                var menuChildren = document.createDocumentFragment();
+                // 创建添加按钮菜单
+                for (var index = 0; index < _this.params.options.menu.length; index++) {
+                    var element = _this.params.options.menu[index];
+                    var menuChildrenElement = document.createElement('p');
+                    menuChildrenElement.dataset.disable = 'false';
+                    menuChildrenElement.dataset.fixway = element;
+                    menuChildrenElement.innerHTML = element;
+                    menuChildren.appendChild(menuChildrenElement);
+                }
+                dragAddMenu.appendChild(menuChildren);
                 document.querySelector('body').appendChild(dragAddMenu);
             } else {
                 this.show(dragAddMenu);
@@ -298,11 +304,23 @@
                     return
                 }
 
+                // 预约类型一天不能重复多次添加
                 var res = _this.chooseType();
                 if (_this.getCurrentPatientTypes[addOjb.parentNode.dataset.orderDate] && _this.getCurrentPatientTypes[addOjb.parentNode.dataset.orderDate].indexOf(res) > -1) {
-                    alert('预约类型不能重复添加！');
+                    typeof _this.params.options.alertCallback === 'function' && _this.params.options.alertCallback(0);
                     return;
                 }
+
+                // 小于当前时间段，超时不能添加
+                var timesId = addOjb.parentNode.dataset.timesId.split('-');
+                var currentDate = new Date().getTime();
+                var orderDateEnd = new Date(addOjb.parentNode.dataset.orderDate + ' ' + timesId[1]).getTime();
+
+                if (orderDateEnd <= currentDate) {
+                    typeof _this.params.options.alertCallback === 'function' && _this.params.options.alertCallback(1);
+                    return;
+                }
+
 
                 var p = document.createElement('p');
                 p.classList.add('current-patient', _this.getFixWay(res));
@@ -577,7 +595,7 @@
             var style = document.createElement('style'),
                 str = '';
             str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 16px;}';
-            str += '.drag-table {user-select: none;color:#333;overflow-y:auto;}';
+            str += '.drag-table {user-select: none;color:#333;overflow:auto;}';
             str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;}';
             str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
             str += '.drag-table li.thead div{color:#333}';

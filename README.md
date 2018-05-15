@@ -132,7 +132,7 @@ var dc = new DragCell({
         name: '李四',
         startTime: '2018-4-26',
         selectFixWay: '平扫',  //修改类型，当前id当前类型
-        // 点击预约类型添加
+        // 点击添加预约类型权限限制弹窗文本，0 包括同一类型不能多次添加，1 超出时间后不可添加
         alertCallback: function (params) {
             var str = '';
             switch (flag) {

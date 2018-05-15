@@ -145,7 +145,7 @@ var dc = new DragCell({
             }
             alert(str);
         },
-        // 点击加号菜单内容
+        // 点击加号菜单选项  name选项文本，class对应的css样式名
         menu: [
             { name: '平扫', class: 'ps' },
             { name: '增强', class: 'zq' },

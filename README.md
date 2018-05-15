@@ -150,7 +150,7 @@ var dc = new DragCell({
             { name: '平扫', class: 'ps' },
             { name: '增强', class: 'zq' },
             { name: '穿刺', class: 'cc' },
-            { name: '核野', class: 'yh' }
+            { name: '核野', class: 'hy' }
         ]
     },
     style: true  //默认创建样式

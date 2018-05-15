@@ -108,7 +108,7 @@ pop.update({   `更新弹窗按钮和title`
 })
 
 
-## drageCell.js   拖拽单元格插件
+## drageCell.js   拖拽单元格插件/日历插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m2.png)
 

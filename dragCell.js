@@ -225,10 +225,10 @@
          */
         getFixWay: function (type) {
             var getFixWay = [];
-            getFixWay['平扫'] = 'ps';
-            getFixWay['增强'] = 'zq';
-            getFixWay['穿刺'] = 'cc';
-            getFixWay['核野'] = 'hy';
+            for (var index = 0; index < this.params.options.menu.length; index++) {
+                var element = this.params.options.menu[index];
+                getFixWay[element.name] = element.class;
+            }
 
             return getFixWay[type];
         },
@@ -282,8 +282,8 @@
                     var element = _this.params.options.menu[index];
                     var menuChildrenElement = document.createElement('p');
                     menuChildrenElement.dataset.disable = 'false';
-                    menuChildrenElement.dataset.fixway = element;
-                    menuChildrenElement.innerHTML = element;
+                    menuChildrenElement.dataset.fixway = element.name;
+                    menuChildrenElement.innerHTML = element.name;
                     menuChildren.appendChild(menuChildrenElement);
                 }
                 dragAddMenu.appendChild(menuChildren);

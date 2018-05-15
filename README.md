@@ -18,7 +18,7 @@ new Pages({
     borderRadius: '3px',
     fontColor: '#333',
     activeColor: '#fff',
-    options: {   //options唯一的参数，包含默认走ajax，如果设置jsonp，则jsonp
+    options: {   //options设置异步加载参数，默认走ajax，如果配置了jsonp，则jsonp
         url: 'http://www.fozon1984.cn/register/uploadfile',
         data: {
             pages: 10,
@@ -146,7 +146,12 @@ var dc = new DragCell({
             alert(str);
         },
         // 点击加号菜单内容
-        menu: ['平扫','增强','穿刺','核野']
+        menu: [
+            { name: '平扫', class: 'ps' },
+            { name: '增强', class: 'zq' },
+            { name: '穿刺', class: 'cc' },
+            { name: '核野', class: 'yh' }
+        ]
     },
     style: true  //默认创建样式
 

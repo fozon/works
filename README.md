@@ -109,6 +109,7 @@ pop.update({   `更新弹窗按钮和title`
 
 #### 自定义HTML部分
 
+<pre>
 <code>
 < div id="dialog" class="hide">
     < div class="room">
@@ -127,6 +128,7 @@ pop.update({   `更新弹窗按钮和title`
     < div id="table">< /div>
 < /div>
 </code>
+</pre>
 
 ## drageCell.js   拖拽单元格插件/日历插件
 

@@ -200,9 +200,7 @@ dc.cancel()  `清空已选择的操作数据`<br>
 
 #### 指定HTML部分
 
-<textarea>
-    <div id="table"></div>
-</textarea>
+“<div id="table">""</div>"
 
 
 #### 接口格式

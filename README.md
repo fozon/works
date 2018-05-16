@@ -107,6 +107,26 @@ pop.update({   `更新弹窗按钮和title`
 
 })
 
+#### 自定义HTML部分
+
+/**
+<div id="dialog" class="hide">
+    <div class="room">
+        <div>
+            预约诊室：
+            <select name="orderDeptName" id="orderDeptId">
+                <option value="">CT定位室</option>
+            </select>
+        </div>
+        <div>
+            <span id="prevWeek">&lt;</span>
+            <input type="text" id="weekString" value="">
+            <span id="nextWeek">></span>
+        </div>
+    </div>
+    <div id="table"></div>
+</div>
+**/
 
 ## drageCell.js   拖拽单元格插件/日历插件
 
@@ -177,6 +197,10 @@ dc.update({  `更新数据时，接口形式尽量保持完整形式`
 
 dc.save()  `获取已操作的数据`<br>
 dc.cancel()  `清空已选择的操作数据`<br>
+
+#### 指定HTML部分
+
+<div id="table"></div>
 
 #### 接口格式
 

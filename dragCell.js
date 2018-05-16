@@ -25,14 +25,17 @@
          * 创建节点
          */
         create: function (params) {
+            // 切换诊室清空之前保存的类型
+            this.getCurrentPatientTypes = {};
+
             var object = params.data;
-            var lis = document.createDocumentFragment();
+            var header = document.createDocumentFragment();
             // 创建默认的thead
             var body = document.querySelector('body');
             var ul = document.createElement('ul');
 
             // 追加thead
-            lis.appendChild(this.createHeader(params.options.startTime));
+            header.appendChild(this.createHeader(params.options.startTime));
 
             // 找到模板id
             var renderTpl = document.querySelector(params.id);
@@ -44,13 +47,14 @@
 
             renderTpl.classList.add('drag-table', params.id.substr(1));
 
-            renderTpl.style.width = typeof this.params.width === 'number' ? this.params.width + 'px' : this.params.width && this.params.width.indexOf('%') > -1 ? this.params.width : 'auto';
-            renderTpl.style.height = typeof this.params.height === 'number' ? this.params.height + 'px' : this.params.height && this.params.height.indexOf('%') > -1 ? this.params.height : 'auto';
+            ul.style.width = typeof this.params.width === 'number' ? this.params.width + 'px' : this.params.width && this.params.width.indexOf('%') > -1 ? this.params.width : 'auto';
+            ul.style.height = typeof this.params.height === 'number' ? this.params.height + 'px' : this.params.height && this.params.height.indexOf('%') > -1 ? this.params.height : 'auto';
 
             // 创建模板
-            ul.appendChild(lis);
+
             ul.appendChild(this.times(object, params));
             renderTpl.innerHTML = '';
+            renderTpl.appendChild(header);
             renderTpl.appendChild(ul);
 
             // 追加类型色块标志
@@ -78,10 +82,15 @@
         createTypeBlock: function (params) {
             var typeBlock = document.createElement('div');
             typeBlock.classList.add('typeBlock');
-            typeBlock.innerHTML += '<div><i class="ps"></i>平扫</div>';
-            typeBlock.innerHTML += '<div><i class="zq"></i>增强</div>';
-            typeBlock.innerHTML += '<div><i class="cc"></i>穿刺</div>';
-            typeBlock.innerHTML += '<div><i class="hy"></i>核野</div>';
+
+            var cf = document.createDocumentFragment();
+            for (var index = 0; index < this.params.options.menu.length; index++) {
+                var element = this.params.options.menu[index];
+                var div = document.createElement('div');
+                div.innerHTML = '<i class="' + element.class + '"></i>' + element.name;
+                cf.appendChild(div);
+            }
+            typeBlock.appendChild(cf);
             return typeBlock;
         },
         /**
@@ -90,10 +99,10 @@
         createHeader: function (startTime) {
             var date = new Date(startTime),
                 getTime = date.getTime(),
-                li = document.createElement('li'),
+                header = document.createElement('div'),
                 div = document.createElement('div'),
                 getWeek = [];
-            li.classList.add('thead');
+            header.classList.add('thead');
             getWeek[1] = '周一';
             getWeek[2] = '周二';
             getWeek[3] = '周三';
@@ -101,15 +110,16 @@
             getWeek[5] = '周五';
             getWeek[6] = '周六';
             getWeek[0] = '周日';
-            li.appendChild(div);
+            div.innerHTML = ' ';
+            header.appendChild(div);
             for (var index = 0; index < 7; index++) {
                 var element = getTime + index * 24 * 60 * 60 * 1000;
                 date.setTime(element);
                 var curDiv = document.createElement('div')
                 curDiv.innerHTML = date.toLocaleDateString() + '<i>' + getWeek[date.getDay()] + '</i>';
-                li.appendChild(curDiv);
+                header.appendChild(curDiv);
             }
-            return li;
+            return header;
         },
         /**
          * 获取当前匹配id的类型数组
@@ -292,7 +302,6 @@
                 this.show(dragAddMenu);
             }
 
-            // dragAddMenu.style.cssText = 'position:absolute;top:' + (addOjb.parentNode.offsetTop + addOjb.parentNode.clientHeight) + 'px;left:' + addOjb.parentNode.offsetLeft + 'px;width:' + addOjb.parentNode.clientWidth + 'px;z-index:10000000;';
             dragAddMenu.style.cssText = 'position:absolute;top:' + (e.clientY) + 'px;left:' + (e.clientX) + 'px;width:' + addOjb.parentNode.clientWidth + 'px;z-index:10000000;';
 
             dragAddMenu.onmousedown = null;
@@ -303,6 +312,9 @@
                 if (el.nodeName != 'P') {
                     return
                 }
+
+                // 关闭菜单
+                _this.hide(this);
 
                 // 预约类型一天不能重复多次添加
                 var res = _this.chooseType();
@@ -349,7 +361,6 @@
                 p.dataset.data = JSON.stringify(data);
                 p.innerHTML = data.name + ' ' + res;
                 addOjb.parentNode.appendChild(p);
-                _this.hide(this);
 
                 // 显示选中文本
                 // var selectedEle = document.querySelector('#selectText');
@@ -424,7 +435,10 @@
                     _this.addClick.call(_this, event, el);
                     return;
                 }
+
+                // 如果不是cell，禁止拖拽
                 if (el.nodeName != 'P' && el.parentNode.classList != 'drag-cell-td' || e.which == 3 || el.dataset.disable == 'false' || !params.dragable) return;
+                
                 defaultIndex = el.dataset.index;
                 // 显示选中文本
                 var data = JSON.parse(el.dataset.data);
@@ -595,13 +609,14 @@
             var style = document.createElement('style'),
                 str = '';
             str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 16px;}';
-            str += '.drag-table {user-select: none;color:#333;overflow:auto;}';
-            str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;}';
+            str += '.drag-table {user-select: none;color:#333;}';
+            str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;overflow-y:auto;}';
             str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
-            str += '.drag-table li.thead div{color:#333}';
-            str += '.drag-table li.thead div i{margin-left:4px;font-style:normal;}';
-            str += '.drag-table li.thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
-            str += '.drag-table ul li {display: flex;justify-content: space-between;}';
+            str += '.drag-table .thead{border-top:1px solid #ccc;border-left:1px solid #ccc;}';
+            str += '.drag-table .thead div{width: 12.5%;color:#333;border-right:1px solid #ccc;}';
+            str += '.drag-table .thead div i{margin-left:4px;font-style:normal;}';
+            str += '.drag-table .thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
+            str += '.drag-table .thead,.drag-table ul li {display: flex;justify-content: space-between;}';
             str += '.drag-table li>div {position: relative;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;text-align:center;}';
             str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 3%;bottom: 4px;width: 94%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;border-radius:4px;}';
             str += '.drag-table li>div .disable-add {border-top:1px dotted #ccc;color:#ccc;background:transparent;}';
@@ -610,7 +625,7 @@
             str += '.drag-table li p:last-child {border: 0;}';
             str += '.drag-table li p[data-disable="false"] {background: #eee;cursor:no-drop;}';
             str += '.drag-table .current-patient {background: #06b;color:#fff;}';
-            str += '.drag-table .typeBlock {display:flex;justify-content:flex-end;padding: 10px 20px;}';
+            str += '.drag-table .typeBlock {position:absolute;top:0;right:10px;display:flex;justify-content:flex-end;padding: 10px 20px;}';
             str += '.drag-table .typeBlock>div {display:flex;justify-content:space-between;align-items:center;}';
             str += '.drag-table .typeBlock i {width:14px;height:14px;margin:0 9px 0 20px;border-radius:3px;}';
             str += '.drag-table .ps {background: #F1AA45!important;color:#fff;}';

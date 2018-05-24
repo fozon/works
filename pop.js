@@ -20,6 +20,12 @@
         },
         create: function (params) {
             var body = document.querySelector('body');
+
+            // 默认样式
+            if (params.style) {
+                body.appendChild(this.createStyle(params));
+            }
+
             // 创建
             var pop = this.pop;
             pop.id = params.class;
@@ -43,35 +49,32 @@
             // 底部
             pop.appendChild(this.footer(params));
 
-            // 默认样式
-            if (params.style) {
-                body.appendChild(this.createStyle(params));
-            }
-
             // 添加遮罩层
             body.appendChild(masking);
 
             // 添加弹窗
             body.appendChild(pop);
+
         },
         createStyle: function (params) {
-            
+
             var style = document.createElement('style'),
                 str = '';
             str += '.popup{position:absolute;left:50%;top:50%;margin-top:-' + (params.height / 2) + 'px;margin-left:-' + (params.width / 2) + 'px;z-index:1000000;background:#fff;border:1px solid #ccc;box-sizing:border-box;}';
-            str += '.popup .header{width:100%;padding:10px;height: 40px;background:#3B5999;color:#fff;box-sizing:border-box;display:flex;justify-content: space-between;z-index:3;}';
+            str += '.popup .header{width:100%;padding:4px 10px;background:#3B5999;color:#fff;box-sizing:border-box;display:flex;justify-content: space-between;z-index:3;}';
             str += '.popup .header i{display:inline-block;width:20px;height:20px;margin-right:10px;vertical-align:middle;}';
-            str += '.popup .header .close{cursor:pointer;width:30px;height:30px;position:relative;}';
+            str += '.popup .header .close{cursor:pointer;width:30px;height:30px;position:relative;top:3px;}';
             str += '.popup .header .close:before,.popup .header .close:after{position:absolute;left:50%;top:0;display:block;width:3px;height:20px;background:#fff;content:"";transform:rotate(-45deg);}';
             str += '.popup .header .close:after{transform:rotate(45deg);}';
-            str += '.popup .content{position:relative;width:100%;height:' + (params.height - 40 - 60) + 'px;padding:0px 10px;box-sizing:border-box;z-index:1;overflow-y:auto;}';
+            str += '.popup .content{position:relative;width:100%;height:calc(100% - 105px);padding:0px 10px;box-sizing:border-box;z-index:1;overflow-y:hidden;}';
             str += '.popup .footer{width:100%;height:60px;padding:10px;text-align:center;box-sizing:border-box;z-index:3;display:flex;justify-content:center;align-items: center;}';
-            str += '.popup .footer button{margin:0px 10px;border:0px solid #3B5999;padding:5px 25px;background:#3B5999;color:#fff;cursor:pointer;border-radius:2px;font-size:16px;}';
+            str += '.popup .footer button{margin:0px 5px;border:0px solid #3B5999;padding:5px 25px;background:#3B5999;color:#fff;cursor:pointer;border-radius:2px;font-size:16px;}';
             if (style.styleSheet) {
                 style.styleSheet.cssText = str;
             } else {
                 style.innerHTML = str;
             }
+
             return style;
         },
         header: function (params) {
@@ -82,7 +85,7 @@
             // 头部-titile
             var title = document.createElement('div');
             title.classList.add('title');
-            title.innerHTML = '<i></i><span>' + params.title + '</span>';
+            title.innerHTML = '<span style="line-height: 30px;">' + params.title + '</span>';
 
             // 头部-button
             var close = document.createElement('div');

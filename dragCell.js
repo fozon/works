@@ -157,6 +157,9 @@
                 div.dataset.orderDate = element.orderDate;
                 div.dataset.timesId = parent;
                 div.classList.add('drag-cell-td');
+                if (this.params.dragable) {
+                    div.style.paddingBottom = '10px';
+                }
                 //第三级 患者
                 div.appendChild(this.patients(element.children, element, div));
                 weeks.appendChild(div);
@@ -207,6 +210,7 @@
 
                 p.classList.add(_this.getFixWay(element.fixWay));
                 p.dataset.data = JSON.stringify(element);
+                p.dataset.index = index;
                 p.innerHTML = element.name + ' ' + element.fixWay;
                 // 今天之前的不容拖动，置灰  设置全局关闭 置灰 如果 === 2 就是就诊结束状态
                 if (parentTime < today || this.params.globalClose || element.medicalStatus === '2') {
@@ -214,8 +218,14 @@
                 }
                 patients.appendChild(p);
             }
+
+            // 小于当前时间段，超时不能添加
+            var timesId = parentOjb.dataset.timesId.split('-');
+            var currentDate = new Date().getTime();
+            var orderDateEnd = new Date(parentOjb.dataset.orderDate + ' ' + timesId[1]).getTime();
+
             // 如果今天之后的给与操作
-            if (parentTime >= today) {
+            if (parentTime >= today && orderDateEnd > currentDate) {
                 if (!this.params.dragable && !this.params.globalClose) {
                     var add = document.createElement('div');
                     add.classList.add('add');
@@ -323,16 +333,6 @@
                     return;
                 }
 
-                // 小于当前时间段，超时不能添加
-                var timesId = addOjb.parentNode.dataset.timesId.split('-');
-                var currentDate = new Date().getTime();
-                var orderDateEnd = new Date(addOjb.parentNode.dataset.orderDate + ' ' + timesId[1]).getTime();
-
-                if (orderDateEnd <= currentDate) {
-                    typeof _this.params.options.alertCallback === 'function' && _this.params.options.alertCallback(1);
-                    return;
-                }
-
 
                 var p = document.createElement('p');
                 p.classList.add('current-patient', _this.getFixWay(res));
@@ -412,10 +412,24 @@
                 moveOjb = null,
                 // 记录初始位置
                 defaultParent = null,
-                // 记录初始索引
-                defaultIndex = 0,
+                // 记录出事拖拽对象
+                defaultEle = null,
                 // 拖拽状态
-                dragStatus = false;
+                dragStatus = false,
+                // 多选状态
+                ctrlMultiple = false,
+                // 存储多选对象
+                multipleObj = [];
+
+            /**
+             * 按下ctrl 多选 按下
+             */
+            document.onkeydown = function (e) {
+                if (e.keyCode === 17) {
+                    ctrlMultiple = true;
+                }
+            }
+
 
             /**
              *
@@ -426,8 +440,6 @@
                 dragAddMenu && _this.hide(dragAddMenu);
                 // 不是p，禁止右键操作
                 var el = e.target || e.srcElement;
-                // 选中
-                _this.clearActive(el);
 
                 // 点击加号
                 if (el.classList.contains('add')) {
@@ -438,19 +450,34 @@
 
                 // 如果不是cell，禁止拖拽
                 if (el.nodeName != 'P' && el.parentNode.classList != 'drag-cell-td' || e.which == 3 || el.dataset.disable == 'false' || !params.dragable) return;
-                
-                defaultIndex = el.dataset.index;
-                // 显示选中文本
+
+                // 点击选中效果 单选 or 多选
+                if (!ctrlMultiple) {
+                    // 清空多选对象
+                    multipleObj = [];
+                    // 点击选中
+                    _this.clearActive(el);
+                } else {
+                    el.classList.add('active');
+                    multipleObj.push(el);
+                }
+
+                // 转换当前选中数据
                 var data = JSON.parse(el.dataset.data);
-                var selectedEle = document.querySelector('#selectText');
-                selectedEle.innerText = '已选中：' + data.name + ' ' + data.fixWay + ' ' + data.orderDate + ' ' + data.week + ' ' + el.parentNode.dataset.timesId;
-                // 复制移动体
+
+                // 显示选中文本 暂不删除 防止需求变更
+                // var selectedEle = document.querySelector('#selectText');
+                // selectedEle.innerText = '已选中：' + data.name + ' ' + data.fixWay + ' ' + data.orderDate + ' ' + data.week + ' ' + el.parentNode.dataset.timesId;
+
+                // 复制单体移动体
                 var clone = el.cloneNode(true);
                 clone.style.display = 'none';
                 moveOjb = document.querySelector('body').appendChild(clone);
+
                 // 初始位置
                 defaultParent = el.parentNode;
-                defaultParent.removeChild(el);
+                defaultEle = el;
+
                 // 添加拖拽
                 this.onmousemove = function (e) {
                     if (!moveOjb) return false;
@@ -472,8 +499,10 @@
                 if (e.which == 3 || !params.dragable) {
                     return;
                 }
+
                 // 子集容器
                 var children = [];
+
                 // 清除拖拽 防止内存溢出
                 this.onmousemove = null;
 
@@ -483,24 +512,27 @@
                 } else {
                     // 清除跟随鼠标
                     moveOjb.style.cssText = '';
-                    defaultParent && defaultParent.insertBefore(moveOjb, defaultParent.childNodes[defaultIndex]);
                 }
 
                 // 没有拖拽过直接回滚
                 if (!dragStatus) {
                     moveOjb.style.cssText = '';
-                    defaultParent && defaultParent.insertBefore(moveOjb, defaultParent.childNodes[defaultIndex]);
                     return;
                 }
 
+                // 获取移动元素的绑定数据
                 data = JSON.parse(moveOjb.dataset.data);
+
                 // 是否包含P的div，才是cell
                 if (el.nodeName == 'DIV' && el.classList == 'drag-cell-td' && el.dataset.disable != 'false') {
+
+                    // 更新移动元素绑定数据
                     data.week = el.dataset.parentId;
                     data.scheduleTime = data.orderDate = el.dataset.orderDate;
                     appendEl = el;
                     el.appendChild(moveOjb);
                     children = el.childNodes;
+
                     // 新增的存进去
                     _this.saveArray({
                         orderWaitRoom: _this.params.options.orderWaitRoom,
@@ -511,12 +543,23 @@
                         fixWay: data.fixWay,
                         id: data.id//传值为修改 否则为增加
                     });
+
+                    // 处理后的data数据塞回移动元素
+                    moveOjb.dataset.data = JSON.stringify(data);
+                    // 放置成功后删除原有元素
+                    defaultParent.removeChild(defaultEle);
+                    // 放置成功后追加新元素
+                    appendEl.appendChild(moveOjb);
+
                     // 或者直接是cell
                 } else if (el.nodeName == 'P' && el.parentNode.classList == 'drag-cell-td' && el.parentNode.dataset.disable != 'false') {
+
+                    // 更新移动元素绑定数据
                     data.week = el.parentNode.dataset.parentId;
                     data.scheduleTime = data.orderDate = el.parentNode.dataset.orderDate;
                     appendEl = el.parentNode;
                     children = el.parentNode.childNodes;
+
                     // 新增的存进去
                     _this.saveArray({
                         orderWaitRoom: _this.params.options.orderWaitRoom,
@@ -527,14 +570,22 @@
                         fixWay: data.fixWay,
                         id: data.id//传值为修改 否则为增加
                     });
+
+                    // 处理后的data数据塞回移动元素
+                    moveOjb.dataset.data = JSON.stringify(data);
+                    // 放置成功后删除原有元素
+                    defaultParent.removeChild(defaultEle);
+                    // 放置成功后追加新元素
+                    // appendEl.appendChild(moveOjb);
+                    appendEl.insertBefore(moveOjb, appendEl.childNodes[el.dataset.index]);
+
+                    // 或者不是cell 
                 } else {
                     appendEl = defaultParent;
                     children = defaultParent.childNodes;
+                    defaultParent.removeChild(moveOjb);
                 }
 
-                moveOjb.dataset.data = JSON.stringify(data);
-
-                appendEl.appendChild(moveOjb);
                 // 每次都要重新格式化子集索引
                 _this.childrenIndex(children);
                 defaultParent = null;
@@ -610,22 +661,26 @@
                 str = '';
             str += '* {padding: 0px;margin: 0px;box-sizing: border-box;}body {font-size: 16px;}';
             str += '.drag-table {user-select: none;color:#333;}';
-            str += '.drag-table ul{border-top: 1px solid #ccc;border-left: 1px solid #ccc;overflow-y:auto;}';
+            str += '.drag-table ul{border: 1px solid #ccc;overflow-y:auto;}';
             str += '.drag-table .select-text{padding:20px 10px;text-align:center;font-size:18px;font-weight:bolder;}';
-            str += '.drag-table .thead{border-top:1px solid #ccc;border-left:1px solid #ccc;}';
-            str += '.drag-table .thead div{width: 12.5%;color:#333;border-right:1px solid #ccc;}';
+            str += '.drag-table .thead{border:1px solid #ccc;border-bottom:0;}';
+            str += '.drag-table .thead div{width: 12.5%;color:#333;}';
+            str += '.drag-table .thead div:first-child{width:150px;border-right: 1px solid #ccc;}';
             str += '.drag-table .thead div i{margin-left:4px;font-style:normal;}';
             str += '.drag-table .thead div,.drag-table li span {display: inline-block;padding: 10px;vertical-align:middle;}';
             str += '.drag-table .thead,.drag-table ul li {display: flex;justify-content: space-between;}';
-            str += '.drag-table li>div {position: relative;width: 12.5%;padding:10px 0px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;text-align:center;}';
-            str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 3%;bottom: 4px;width: 94%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;background:#3B5999;color:#fff;font-size:20px;border-radius:4px;}';
+            str += '.drag-table li>div {position: relative;width: 12.5%;padding:10px 0px;border-bottom: 1px solid #ccc;border-collapse: collapse;padding-bottom:40px;text-align:center;}';
+            str += '.drag-table li>div:first-child {width:150px;display:flex;justify-content:center;align-items:center;padding-bottom: 0px;padding-top:0px;border-right: 1px solid #ccc;}';
+            str += '.drag-table li>div .add,.drag-table li>div .disable-add {position: absolute;left: 3%;bottom: 4px;width: 94%;height: 30px;line-height: 30px;text-align: center;cursor: pointer;z-index: 3;color:#ccc;font-size:20px;border-radius:4px;border:1px dashed #ccc;}';
+            str += '.drag-table li>div .add:hover,.drag-table li>div .disable-add:hover {background:#3B5999;color:#fff;border:1px solid transparent;}';
             str += '.drag-table li>div .disable-add {border-top:1px dotted #ccc;color:#ccc;background:transparent;}';
+            str += '.drag-table li:last-of-type>div{border-bottom:0;}';
             str += '.dragable-add-menu p:hover {background: #eee;}';
             str += '.drag-table li p {display:inline-block;width:94%;padding:4px 10px;margin-bottom:4px;font-size: 16px;text-align:center;border-radius:4px;}';
-            str += '.drag-table li p:last-child {border: 0;}';
+            str += '.drag-table li p:last-child {border: 0;margin-bottom:0px;}';
             str += '.drag-table li p[data-disable="false"] {background: #eee;cursor:no-drop;}';
             str += '.drag-table .current-patient {background: #06b;color:#fff;}';
-            str += '.drag-table .typeBlock {position:absolute;top:0;right:10px;display:flex;justify-content:flex-end;padding: 10px 20px;}';
+            str += '.drag-table .typeBlock {position:absolute;top:4px;right:10px;display:flex;justify-content:flex-end;padding: 10px 20px;}';
             str += '.drag-table .typeBlock>div {display:flex;justify-content:space-between;align-items:center;}';
             str += '.drag-table .typeBlock i {width:14px;height:14px;margin:0 9px 0 20px;border-radius:3px;}';
             str += '.drag-table .ps {background: #F1AA45!important;color:#fff;}';

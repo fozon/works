@@ -133,6 +133,8 @@ pop.update({   `更新弹窗按钮和title`
 ## drageCell.js   拖拽单元格插件/日历插件
 
 ![image](https://github.com/fozon/works/blob/master/static/m2.png)
+![image](https://github.com/fozon/works/blob/master/static/m3.png)
+![image](https://github.com/fozon/works/blob/master/static/m4.png)
 
 #### 调用方法
 
@@ -192,6 +194,14 @@ dc.update({  `更新数据时，接口形式尽量保持完整形式`
         orderWaitRoom: '100', //诊室id
         name: '哈哈' //患者姓名,
         startTime: '2018-04-29', //生成当前周 对应的起始时间
+        selectFixWay: '增强',  //修改类型，当前id当前类型
+        // 点击加号菜单选项  name选项文本，class对应的css样式名
+        menu: [
+            { name: '平扫', class: 'ps' },
+            { name: '增强', class: 'zq' },
+            { name: '穿刺', class: 'cc' },
+            { name: '核野', class: 'hy' }
+        ]
     },
     style: false  //默认创建样式
 

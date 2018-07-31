@@ -8,7 +8,7 @@
 <br>
 
 ## selectToInput.js   下拉点击输入联动插件
-![image](https://github.com/fozon/works/blob/master/static/pages.png)
+![image](https://github.com/fozon/works/blob/master/static/selecttoinput.png)
 
 #### 调用方法
 

@@ -7,6 +7,38 @@
 <br>
 <br>
 
+## selectToInput.js   下拉点击输入联动插件
+![image](https://github.com/fozon/works/blob/master/static/pages.png)
+
+#### 调用方法
+
+new selectToInput({
+
+    id: 'test', // 指定dom节点
+    dict: [  // 下拉列表数据
+        {
+            dmsb: '1',
+            dmmc: '测1'
+        },
+        {
+            dmsb: '2',
+            dmmc: '测2'
+        },
+        {
+            dmsb: '3',
+            dmmc: '测3'
+        },
+        {
+            dmsb: '4',
+            dmmc: '测4'
+        }
+    ],
+    line: 'true', // 列表中的选项是否平铺
+    title: '测试', // 对应说明的title
+    style: true  // 是否自动创建默认样式
+
+})
+
 ## page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)
 

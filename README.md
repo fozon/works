@@ -15,7 +15,7 @@
 new selectToInput({
 
     id: 'test', // 指定dom节点
-    dict: [  // 下拉列表数据
+    data: [  // 下拉列表数据
         {
             dmsb: '1',
             dmmc: '测1'
@@ -35,7 +35,9 @@ new selectToInput({
     ],
     line: 'true', // 列表中的选项是否平铺
     title: '测试', // 对应说明的title
-    style: true  // 是否自动创建默认样式
+    style: true,  // 是否自动创建默认样式
+    input: true, //是否下拉带上input输入
+    valueType: 'text' // text 表示字段接受的值，是不是字符串，默认为数值型
 
 })
 

@@ -43,7 +43,7 @@ var test = new selectToInput({
 
 #### 扩展方法
 
-test.setValue(1)    `setValue方法设置下拉值，传入的字符串或者数值，内部自动转换`
+test.setValue(1)    `setValue方法设置下拉值，传入的字符串或者数值，内部自动转换` <br>
 test.getValue()     `getValue方法获取值`
 
 ## page.js   翻页插件

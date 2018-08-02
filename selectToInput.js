@@ -174,7 +174,7 @@
                         break;
                     }
                 } else {
-                    if (element.dmsb === string) {
+                    if (element.dmsb == string) {
                         res.status = true;
                         res.value = element.dmmc;
                         break;
@@ -194,7 +194,7 @@
             str += '.select-' + params.id + '>span{display:inline-block;width:73px;text-align-last: justify;}';
             str += '.select-' + params.id + '>a{display: inline-block;width:0;height:0;left: 198px; top: 10px;position: absolute; opacity: 0.6;cursor: pointer;z-index:5;border: 6px solid transparent;border-top: 6px solid #999;}';
             str += '.select-' + params.id + ' ul{margin:0;padding:0;}';
-            str += '.select-' + params.id + ' li{list-style-type: none;padding: 4px 10px;}';
+            str += '.select-' + params.id + ' li{list-style-type: none;padding: 4px 10px!important;}';
             str += '.select-' + params.id + ' li:hover{color: #3b5999;}';
 
             if (style.styleSheet) {
@@ -210,11 +210,15 @@
             params.dom.down.value = a;
             params.dom.hidden.value = a;
             if (!isNaN(a)) {
-                var res = this.inArray(a.toString(), params.data, true);
+                var res = this.inArray(a, params.data, true);
                 if (res.status) {
                     params.dom.down.value = res.value;
                 }
             }
+        },
+        getValue: function () {
+            var params = this.get();
+            return params.dom.hidden.value;
         }
     };
 })(window, document);

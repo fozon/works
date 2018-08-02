@@ -12,7 +12,7 @@
 
 #### 调用方法
 
-new selectToInput({
+var test = new selectToInput({
 
     id: 'test', // 指定dom节点
     data: [  // 下拉列表数据
@@ -40,6 +40,11 @@ new selectToInput({
     valueType: 'text' // text 表示字段接受的值，是不是字符串，默认为数值型
 
 })
+
+#### 扩展方法
+
+test.setValue(1)    `setValue方法设置下拉值，传入的字符串或者数值，内部自动转换`
+test.getValue()     `getValue方法获取值`
 
 ## page.js   翻页插件
 ![image](https://github.com/fozon/works/blob/master/static/pages.png)

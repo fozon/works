@@ -33,11 +33,11 @@ var test = new selectToInput({
             dmmc: '测4'
         }
     ],
-    line: 'true', // 列表中的选项是否平铺
-    title: '测试', // 对应说明的title
+    line: true, // 下拉列表中的选项是否平铺
+    title: '测试', // 对应title
     style: true,  // 是否自动创建默认样式
-    input: true, //是否下拉带上input输入
-    valueType: 'text' // text 表示字段接受的值，是不是字符串，默认为数值型
+    input: true, //是否带上input输入
+    valueType: 'text' // text 表示字段接收的值为字符串类型，默认为数值型
 
 })
 
